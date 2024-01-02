@@ -1,36 +1,19 @@
+import { Pressable } from 'react-native';
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import styled from 'styled-components/native';
+
+import { SafeView } from '../../components/SafeView';
+import { Typography } from '../../components/Typography';
 
 export default function Page() {
   return (
-    <View style={styles.main}>
-      <Text style={styles.title}>Home</Text>
+    <Container>
+      <Typography>Home</Typography>
       <Pressable onPress={() => router.push('/sign-in')}>
-        <Text style={styles.subtitle}>Logout</Text>
+        <Typography>Logout</Typography>
       </Pressable>
-    </View>
+    </Container>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: 'center',
-    maxWidth: 960,
-    marginHorizontal: 'auto',
-    backgroundColor: 'red'
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    fontSize: 36,
-    color: '#38434D',
-  },
-});
+const Container = styled(SafeView)``;
