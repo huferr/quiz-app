@@ -4,9 +4,12 @@ import { ShoppingCartIcon } from 'lucide-react-native';
 import { HomeIcon, PlayIcon, User } from 'lucide-react-native';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
+import { HOME_ROUTES } from '../../constants';
 
 export function TabNavigator(props: BottomTabBarProps) {
-  const homeRoutes = props.state.routes;
+  const homeRoutes = props.state.routes.filter((route) =>
+    HOME_ROUTES.some((homeRoute) => homeRoute.includes(route.name))
+  );
 
   const icons: { [x: string]: (color: string) => React.JSX.Element } = {
     index: (color) => <HomeIcon color={color || '#000'} />,
@@ -21,12 +24,15 @@ export function TabNavigator(props: BottomTabBarProps) {
   };
 
   const currentRoute = props.navigation.getState().index;
+
   return (
     <Container>
       {homeRoutes.map((route, index) => {
         return (
           <IconButton key={route.key} onPress={() => handleClick(route)}>
-            {icons[route.name](currentRoute === index ? '#2A74E4' : '#000')}
+            {icons?.[route?.name]?.(
+              currentRoute === index ? '#2A74E4' : '#000'
+            )}
           </IconButton>
         );
       })}
@@ -41,7 +47,7 @@ const Container = styled.View`
   justify-content: space-between;
   border-top-width: 1px;
   border-top-style: solid;
-  border-top-color: #E7E7E7;
+  border-top-color: #e7e7e7;
 `;
 
 const IconButton = styled.TouchableOpacity`
