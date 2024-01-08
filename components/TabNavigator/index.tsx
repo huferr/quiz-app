@@ -1,10 +1,10 @@
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs/src/types';
-import { router } from 'expo-router';
-import { ShoppingCartIcon } from 'lucide-react-native';
-import { HomeIcon, PlayIcon, User } from 'lucide-react-native';
-import { Platform } from 'react-native';
-import styled from 'styled-components/native';
-import { HOME_ROUTES } from '../../constants';
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
+import { router } from "expo-router";
+import { ShoppingCartIcon } from "lucide-react-native";
+import { HomeIcon, PlayIcon, User } from "lucide-react-native";
+import styled from "styled-components/native";
+import { HOME_ROUTES } from "../../constants";
+import { isPlatform } from "../../utils";
 
 export function TabNavigator(props: BottomTabBarProps) {
   const homeRoutes = props.state.routes.filter((route) =>
@@ -12,15 +12,15 @@ export function TabNavigator(props: BottomTabBarProps) {
   );
 
   const icons: { [x: string]: (color: string) => React.JSX.Element } = {
-    index: (color) => <HomeIcon color={color || '#000'} />,
-    profile: (color) => <User color={color || '#000'} />,
-    play: (color) => <PlayIcon color={color || '#000'} />,
-    store: (color) => <ShoppingCartIcon color={color || '#000'} />,
+    index: (color) => <HomeIcon color={color || "#000"} />,
+    profile: (color) => <User color={color || "#000"} />,
+    play: (color) => <PlayIcon color={color || "#000"} />,
+    store: (color) => <ShoppingCartIcon color={color || "#000"} />,
   };
 
   const handleClick = (route: (typeof homeRoutes)[0]) => {
-    const routeName = route.name === 'index' ? '' : route.name;
-    router.push('/home/' + routeName);
+    const routeName = route.name === "index" ? "" : route.name;
+    router.push("/home/" + routeName);
   };
 
   const currentRoute = props.navigation.getState().index;
@@ -31,7 +31,7 @@ export function TabNavigator(props: BottomTabBarProps) {
         return (
           <IconButton key={route.key} onPress={() => handleClick(route)}>
             {icons?.[route?.name]?.(
-              currentRoute === index ? '#2A74E4' : '#000'
+              currentRoute === index ? "#2A74E4" : "#000"
             )}
           </IconButton>
         );
@@ -42,7 +42,7 @@ export function TabNavigator(props: BottomTabBarProps) {
 
 const Container = styled.View`
   padding: 16px 24px;
-  padding-bottom: ${Platform.OS === 'ios' ? 32 : 16}px;
+  padding-bottom: ${isPlatform("ios") ? 32 : 16}px;
   flex-direction: row;
   justify-content: space-between;
   border-top-width: 1px;

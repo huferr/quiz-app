@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../api';
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../api";
+import { Question } from "../types";
 
 export const useGetQuestions = () => {
   const fetcher = async () => {
     try {
-      const response = await api.get('/questions');
+      const response = await api.get("/questions");
 
       return response.data;
     } catch (error) {
@@ -12,13 +13,13 @@ export const useGetQuestions = () => {
     }
   };
 
-  return useQuery({ queryKey: ['questions'], queryFn: fetcher });
+  return useQuery({ queryKey: ["questions"], queryFn: fetcher });
 };
 
 export const useGetSingleQuestion = () => {
   const fetcher = async () => {
     try {
-      const response = await api.get('/questions/single');
+      const response = await api.get<Question>("questions/single");
 
       return response.data;
     } catch (error) {
@@ -26,5 +27,9 @@ export const useGetSingleQuestion = () => {
     }
   };
 
-  return useQuery({ queryKey: ['random_question'], queryFn: fetcher });
+  return useQuery({
+    queryKey: ["useGetSingleQuestion"],
+    queryFn: fetcher,
+    staleTime: Infinity,
+  });
 };
