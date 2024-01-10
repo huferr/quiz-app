@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { isPlatform } from "../../utils";
+import { isPlatform } from "@/utils";
 
 interface Props {
   children: React.ReactNode;

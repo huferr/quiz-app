@@ -1,6 +1,6 @@
-import { Tabs, usePathname, useSegments } from 'expo-router';
-import { TabNavigator } from '../../../components/TabNavigator';
-import { HOME_ROUTES } from '../../../constants';
+import { Tabs } from "expo-router";
+
+import { TabNavigator } from "@/components";
 
 export default function RootLayout() {
   return (

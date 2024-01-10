@@ -1,4 +1,4 @@
-import { Typography, SafeView } from '../../../components';
+import { Typography, SafeView } from "@/components";
 
 export default function Profile() {
   return (

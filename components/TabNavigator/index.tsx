@@ -2,8 +2,8 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
 import { router } from "expo-router";
 import { ShoppingCartIcon } from "lucide-react-native";
 import { HomeIcon, PlayIcon, User } from "lucide-react-native";
-import { HOME_ROUTES } from "../../constants";
-import { isPlatform } from "../../utils";
+import { HOME_ROUTES } from "@/constants";
+import { isPlatform } from "@/utils";
 
 import styled from "styled-components/native";
 

@@ -1,13 +1,13 @@
 export interface Question {
-  answer: string | null;
+  answer: string;
   created_at: string;
   id: number;
-  img_url: string | null;
-  level: number | null;
-  opt_four: string | null;
-  opt_one: string | null;
-  opt_three: string | null;
-  opt_two: string | null;
-  title: string | null;
-  type: string | null;
+  img_url: string;
+  level: number;
+  opt_four: string;
+  opt_one: string;
+  opt_three: string;
+  opt_two: string;
+  title: string;
+  type: string;
 }

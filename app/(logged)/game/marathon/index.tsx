@@ -1,21 +1,21 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { SafeView, Typography } from "../../../../components";
-import { router } from "expo-router";
-import { useGetSingleQuestion, useTimer } from "../../../../hooks";
-import styled from "styled-components/native";
-import { isPlatform } from "../../../../utils";
 import { useState } from "react";
-import { FullModal } from "../../../../components/FullModal";
+import { Text, TouchableOpacity } from "react-native";
+import { router } from "expo-router";
+import styled from "styled-components/native";
+
+import { SafeView, Typography, FullModal } from "@/components";
+import { useGetSingleQuestion, useTimer } from "@/hooks";
+import { isPlatform } from "@/utils";
 
 export default function Marathon() {
-  const { data, refetch } = useGetSingleQuestion();
+  const { data, refetch, isLoading } = useGetSingleQuestion();
+
   const [selectedOption, setSelectedOption] = useState("");
   const [streak, setStreak] = useState(0);
   const [lose, setLose] = useState(false);
 
   const { clock, resetClock, pause } = useTimer(20, {
     onFinish: () => {
-      console.log("acabou o tempo");
       resetClock();
       pause();
       setLose(true);
@@ -30,6 +30,32 @@ export default function Marathon() {
 
   const answer = data?.answer;
 
+  const handleOnSelectOption = (opt: string) => {
+    setSelectedOption(opt);
+
+    const correctOption = opt === answer;
+
+    if (correctOption) {
+      setStreak((prev) => prev + 1);
+
+      setTimeout(() => {
+        refetch().then(() => {
+          setSelectedOption("");
+          resetClock();
+        });
+      }, 500);
+
+      return;
+    }
+
+    setStreak(0);
+    pause();
+
+    setTimeout(() => {
+      setLose(true);
+    }, 250);
+  };
+
   return (
     <SafeView
       paddingHorizontal={isPlatform("android") ? 16 : 24}
@@ -41,9 +67,13 @@ export default function Marathon() {
             Voltar
           </Typography>
         </TouchableOpacity>
-        <Typography fontWeight="700" fontSize={24} color="#fff">
-          {clock}
-        </Typography>
+
+        {!isLoading && (
+          <Typography fontWeight="700" fontSize={24} color="#fff">
+            {clock}
+          </Typography>
+        )}
+
         <Typography color="#fff">Maratona</Typography>
       </Header>
 
@@ -69,27 +99,7 @@ export default function Marathon() {
                 isSelectedCorrect={isSelectedCorrect}
                 isSelectedOption={selectedOption === option}
                 disabled={!!selectedOption}
-                onPress={() => {
-                  setSelectedOption(String(option));
-
-                  if (String(option) === answer) {
-                    setStreak((prev) => prev + 1);
-                  } else {
-                    setStreak(0);
-                    pause();
-                    setTimeout(() => {
-                      setLose(true);
-                    }, 500);
-                    setSelectedOption("");
-                    return;
-                  }
-                  setTimeout(() => {
-                    refetch().then(() => {
-                      setSelectedOption("");
-                      resetClock();
-                    });
-                  }, 750);
-                }}
+                onPress={() => handleOnSelectOption(String(option))}
               >
                 <Typography fontWeight="700">{option}</Typography>
               </OptionButton>
@@ -99,19 +109,31 @@ export default function Marathon() {
         <Text style={{ color: "#fff", paddingTop: 24 }}>Streak: {streak}</Text>
       </Content>
 
-      <FullModal visible={lose}>
+      <FullModal visible={lose} animationType="slide">
         <LoseModalContainer>
           <Typography color="#fff">Você perdeu!</Typography>
           <TouchableOpacity
             onPress={() => {
-              setLose(false);
+              setSelectedOption("");
+
               refetch().then(() => {
                 resetClock();
               });
+              setLose(false);
             }}
           >
             <Typography fontWeight="700" color="#fff">
               Tentar Novamente
+            </Typography>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/game/marathon/onboarding");
+            }}
+          >
+            <Typography fontWeight="700" color="#fff">
+              Sair
             </Typography>
           </TouchableOpacity>
         </LoseModalContainer>

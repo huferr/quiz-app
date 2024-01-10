@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components/native";
 import { ModalBaseProps } from "react-native";
+import styled from "styled-components/native";
 
 interface Props extends ModalBaseProps {
   children: React.ReactNode;

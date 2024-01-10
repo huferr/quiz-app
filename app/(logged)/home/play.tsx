@@ -1,6 +1,7 @@
-import { TouchableOpacity } from 'react-native';
-import { SafeView, Typography } from '../../../components';
-import { router } from 'expo-router';
+import { TouchableOpacity } from "react-native";
+import { router } from "expo-router";
+
+import { SafeView, Typography } from "@/components";
 
 export default function Play() {
   return (
@@ -9,8 +10,10 @@ export default function Play() {
 
       <Typography>Selecione o modo de jogo:</Typography>
 
-      <TouchableOpacity onPress={() => router.push('/game/marathon/onboarding')}>
-        <Typography fontWeight='700'>Maratona</Typography>
+      <TouchableOpacity
+        onPress={() => router.push("/game/marathon/onboarding")}
+      >
+        <Typography fontWeight="700">Maratona</Typography>
       </TouchableOpacity>
     </SafeView>
   );

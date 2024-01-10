@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { api } from "../api";
-import { Question } from "../types";
+import { api } from "@/api";
+import { Question } from "@/types";
 import { useEffect, useRef, useState } from "react";
 
 export const useGetQuestions = () => {

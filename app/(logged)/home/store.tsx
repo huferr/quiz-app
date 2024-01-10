@@ -1,4 +1,4 @@
-import { SafeView, Typography } from '../../../components';
+import { SafeView, Typography } from "@/components";
 
 export default function Store() {
   return (

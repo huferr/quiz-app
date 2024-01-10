@@ -1,8 +1,9 @@
 import { TouchableOpacity } from "react-native";
-import { SafeView, Typography } from "../../../../components";
 import { router } from "expo-router";
 import styled from "styled-components/native";
-import { isPlatform } from "../../../../utils";
+
+import { SafeView, Typography } from "@/components";
+import { isPlatform } from "@/utils";
 
 export default function MarathonOnboarding() {
   return (
