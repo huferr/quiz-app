@@ -43,7 +43,7 @@ export default function Marathon() {
           setSelectedOption("");
           resetClock();
         });
-      }, 500);
+      }, 250);
 
       return;
     }

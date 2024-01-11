@@ -5,14 +5,14 @@ import { useState } from "react";
 import { supabase } from "@/api";
 import { TextInput } from "react-native-gesture-handler";
 
-export default function SignIn() {
+export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function login() {
+  async function register() {
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
     });
@@ -25,22 +25,20 @@ export default function SignIn() {
       alert(error.message);
     }
 
-    router.push("/home");
+    if (data.user) {
+      router.push("/home");
+    }
   }
   return (
     <SafeView>
-      <Typography>Sign In</Typography>
+      <Typography>Sign Up</Typography>
       <Text>Email</Text>
       <TextInput value={email} onChangeText={(e) => setEmail(e)} />
       <Text>Password</Text>
       <TextInput value={password} onChangeText={(e) => setPassword(e)} />
 
-      <Pressable onPress={login}>
-        <Typography>Sign In</Typography>
-      </Pressable>
-
-      <Pressable onPress={() => router.push("/auth/sign-up")}>
-        <Typography>Register</Typography>
+      <Pressable onPress={register}>
+        <Typography>Sign Up</Typography>
       </Pressable>
     </SafeView>
   );

@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api";
 import { Question } from "@/types";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AuthContext } from "@/providers/AuthProvider";
+
+export const useAuth = () => useContext(AuthContext);
 
 export const useGetQuestions = () => {
   const fetcher = async () => {
