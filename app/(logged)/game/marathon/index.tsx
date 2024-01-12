@@ -4,11 +4,20 @@ import { router } from "expo-router";
 import styled from "styled-components/native";
 
 import { SafeView, Typography, FullModal } from "@/components";
-import { useGetSingleQuestion, useTimer } from "@/hooks";
+import {
+  useComputeUserAnswer,
+  useGetProfile,
+  useGetSingleQuestion,
+  useTimer,
+} from "@/hooks";
 import { isPlatform } from "@/utils";
 
 export default function Marathon() {
   const { data, refetch, isLoading } = useGetSingleQuestion();
+
+  const { refetch: refetchUserData } = useGetProfile();
+
+  const { mutateAsync: computeAnswer } = useComputeUserAnswer();
 
   const [selectedOption, setSelectedOption] = useState("");
   const [streak, setStreak] = useState(0);
@@ -30,13 +39,14 @@ export default function Marathon() {
 
   const answer = data?.answer;
 
-  const handleOnSelectOption = (opt: string) => {
+  const handleOnSelectOption = async (opt: string) => {
     setSelectedOption(opt);
 
     const correctOption = opt === answer;
 
     if (correctOption) {
       setStreak((prev) => prev + 1);
+      await computeAnswer({ type: "correct", value: 1 });
 
       setTimeout(() => {
         refetch().then(() => {
@@ -48,6 +58,8 @@ export default function Marathon() {
       return;
     }
 
+    await computeAnswer({ type: "wrong", value: 1 });
+    await refetchUserData();
     setStreak(0);
     pause();
 
@@ -113,10 +125,10 @@ export default function Marathon() {
         <LoseModalContainer>
           <Typography color="#fff">Você perdeu!</Typography>
           <TouchableOpacity
-            onPress={() => {
+            onPress={async () => {
               setSelectedOption("");
 
-              refetch().then(() => {
+              await refetch().then(() => {
                 resetClock();
               });
               setLose(false);

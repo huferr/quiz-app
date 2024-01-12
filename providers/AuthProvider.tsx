@@ -6,6 +6,7 @@ type ContextProps = {
   user: boolean | null;
   session: Session | null;
   loading: boolean;
+  userId: string | undefined;
 };
 
 interface Props {
@@ -18,6 +19,8 @@ const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<ContextProps["user"]>(null);
   const [session, setSession] = useState<ContextProps["session"]>(null);
   const [loading, setLoading] = useState(false);
+
+  const userId = session?.user?.id;
 
   const sessionFetcher = async () => {
     setLoading(true);
@@ -63,8 +66,9 @@ const AuthProvider = ({ children }: Props) => {
       user,
       session,
       loading,
+      userId,
     }),
-    [user, session, loading]
+    [user, session, loading, userId]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

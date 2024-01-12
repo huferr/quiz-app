@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/api";
-import { Question } from "@/types";
+import { Question, User } from "@/types";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
 
@@ -35,6 +35,56 @@ export const useGetSingleQuestion = () => {
     queryKey: ["useGetSingleQuestion"],
     queryFn: fetcher,
     staleTime: Infinity,
+  });
+};
+
+export const useGetProfile = () => {
+  const { userId } = useAuth();
+
+  const fetcher = async () => {
+    try {
+      const response = await api.get<{ data: User }>(`/user/${userId}`);
+
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useQuery({
+    queryKey: ["useGetProfile", userId],
+    queryFn: fetcher,
+    staleTime: Infinity,
+    refetchOnMount: "always",
+  });
+};
+
+export const useComputeUserAnswer = () => {
+  const { userId } = useAuth();
+
+  const fetcher = async ({
+    value,
+    type,
+  }: {
+    value: number;
+    type: "wrong" | "correct";
+  }) => {
+    try {
+      const response = await api.post("/questions/compute", {
+        userId,
+        value,
+        type,
+      });
+      console.log(response.data, value, type);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useMutation({
+    mutationKey: ["useComputeUserAnswer", userId],
+    mutationFn: fetcher,
   });
 };
 
