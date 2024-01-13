@@ -88,6 +88,28 @@ export const useComputeUserAnswer = () => {
   });
 };
 
+export const useUpdateStreak = () => {
+  const { userId } = useAuth();
+
+  const fetcher = async (streak: number) => {
+    try {
+      const response = await api.post("/questions/streak", {
+        userId,
+        newStreak: streak,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useMutation({
+    mutationKey: ["useUpdateStreak", userId],
+    mutationFn: fetcher,
+  });
+};
+
 export function useInterval(
   callback: () => void,
   delay: number | null,

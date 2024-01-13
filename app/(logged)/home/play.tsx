@@ -5,7 +5,7 @@ import { SafeView, Typography } from "@/components";
 
 export default function Play() {
   return (
-    <SafeView>
+    <SafeView paddingHorizontal={24}>
       <Typography>Play</Typography>
 
       <Typography>Selecione o modo de jogo:</Typography>

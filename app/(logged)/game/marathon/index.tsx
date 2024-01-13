@@ -9,15 +9,15 @@ import {
   useGetProfile,
   useGetSingleQuestion,
   useTimer,
+  useUpdateStreak,
 } from "@/hooks";
 import { isPlatform } from "@/utils";
 
 export default function Marathon() {
   const { data, refetch, isLoading } = useGetSingleQuestion();
-
-  const { refetch: refetchUserData } = useGetProfile();
-
+  const { refetch: refetchUserData, data: userData } = useGetProfile();
   const { mutateAsync: computeAnswer } = useComputeUserAnswer();
+  const { mutateAsync: updateStreak } = useUpdateStreak();
 
   const [selectedOption, setSelectedOption] = useState("");
   const [streak, setStreak] = useState(0);
@@ -33,11 +33,23 @@ export default function Marathon() {
 
   const question = data?.title;
 
+  const userCurrentStreak = userData?.streak || 0;
+
   const options = data
     ? [data?.opt_one, data?.opt_two, data?.opt_three, data?.opt_four]
     : [];
 
   const answer = data?.answer;
+
+  const handleUpdateStreak = async (add?: boolean) => {
+    // In the moment of calling this function (When user select an option, and it is CORRECT),
+    // the streak state (React State) is not updated yet,
+    // so we need to add 1 to the streak
+    const addOne = add ? 1 : 0;
+    if (userCurrentStreak < streak + addOne) {
+      await updateStreak(streak + addOne);
+    }
+  };
 
   const handleOnSelectOption = async (opt: string) => {
     setSelectedOption(opt);
@@ -53,19 +65,23 @@ export default function Marathon() {
           setSelectedOption("");
           resetClock();
         });
-      }, 250);
+      }, 100);
+
+      await handleUpdateStreak(true);
 
       return;
     }
 
-    await computeAnswer({ type: "wrong", value: 1 });
-    await refetchUserData();
     setStreak(0);
     pause();
 
     setTimeout(() => {
       setLose(true);
-    }, 250);
+    }, 100);
+
+    await computeAnswer({ type: "wrong", value: 1 });
+    await handleUpdateStreak();
+    await refetchUserData();
   };
 
   return (
@@ -127,7 +143,6 @@ export default function Marathon() {
           <TouchableOpacity
             onPress={async () => {
               setSelectedOption("");
-
               await refetch().then(() => {
                 resetClock();
               });
@@ -141,6 +156,7 @@ export default function Marathon() {
 
           <TouchableOpacity
             onPress={() => {
+              refetch();
               router.push("/game/marathon/onboarding");
             }}
           >

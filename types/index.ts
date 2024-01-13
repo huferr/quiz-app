@@ -13,11 +13,12 @@ export interface Question {
 }
 
 export interface User {
-  correct_answers: number | null;
+  id: string;
   email: string | null;
   first_name: string | null;
-  id: string;
   last_name: string | null;
   username: string | null;
-  wrong_answers: number | null;
+  correct_answers: number;
+  wrong_answers: number;
+  streak: number;
 }
