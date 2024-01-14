@@ -7,6 +7,7 @@ export default function Profile() {
   const correctAnswers = data?.correct_answers || 0;
   const wrongAnswers = data?.wrong_answers || 0;
   const streak = data?.streak || 0;
+  const badges = data?.badges || [];
 
   const rate = (correctAnswers / (correctAnswers + wrongAnswers)) * 100;
 
@@ -23,9 +24,9 @@ export default function Profile() {
       <Typography>Profile</Typography>
       <Typography>Correct Answers: {correctAnswers}</Typography>
       <Typography>Wrong Answers: {wrongAnswers}</Typography>
-      <Typography>Rate: {rate}</Typography>
+      <Typography>Correct Answers Rate: {rate}</Typography>
       <Typography>Streak: {streak}</Typography>
-      <Typography>Badges: </Typography>
+      <Typography>Badges: {badges.map((badge) => `${badge} `)}</Typography>
     </SafeView>
   );
 }

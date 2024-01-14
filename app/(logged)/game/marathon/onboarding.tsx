@@ -4,8 +4,14 @@ import styled from "styled-components/native";
 
 import { SafeView, Typography } from "@/components";
 import { isPlatform } from "@/utils";
+import { useGetProfile } from "@/hooks";
 
 export default function MarathonOnboarding() {
+
+  const { data } = useGetProfile();
+
+  const streak = data?.streak || 0;
+
   return (
     <SafeView
       paddingHorizontal={isPlatform("android") ? 16 : 24}
@@ -30,6 +36,15 @@ export default function MarathonOnboarding() {
             Play
           </Typography>
         </TouchableOpacity>
+        <Typography
+            fontWeight="700"
+            fontSize={24}
+            color="#fff"
+            textAlign="center"
+            marginTop={24}
+          >
+            Record: {streak}
+          </Typography>
       </Content>
     </SafeView>
   );

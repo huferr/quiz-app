@@ -21,4 +21,5 @@ export interface User {
   correct_answers: number;
   wrong_answers: number;
   streak: number;
+  badges: string[] | null;
 }

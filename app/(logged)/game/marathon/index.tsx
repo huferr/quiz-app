@@ -23,10 +23,14 @@ export default function Marathon() {
   const [streak, setStreak] = useState(0);
   const [lose, setLose] = useState(false);
 
-  const { clock, resetClock, pause } = useTimer(20, {
+  const {
+    clock,
+    resetClock,
+    pause: pauseClock,
+  } = useTimer(20, {
     onFinish: () => {
       resetClock();
-      pause();
+      pauseClock();
       setLose(true);
     },
   });
@@ -72,8 +76,7 @@ export default function Marathon() {
       return;
     }
 
-    setStreak(0);
-    pause();
+    pauseClock();
 
     setTimeout(() => {
       setLose(true);
@@ -82,6 +85,10 @@ export default function Marathon() {
     await computeAnswer({ type: "wrong", value: 1 });
     await handleUpdateStreak();
     await refetchUserData();
+  };
+
+  const handleViewAds = async () => {
+    console.log("view ads");
   };
 
   return (
@@ -143,6 +150,23 @@ export default function Marathon() {
           <TouchableOpacity
             onPress={async () => {
               setSelectedOption("");
+
+              await handleViewAds().then(async () => {
+                await refetch().then(() => {
+                  resetClock();
+                  setLose(false);
+                });
+              });
+            }}
+          >
+            <Typography fontWeight="700" color="#fff">
+              Ver Anuncio
+            </Typography>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={async () => {
+              setSelectedOption("");
               await refetch().then(() => {
                 resetClock();
               });
@@ -150,7 +174,7 @@ export default function Marathon() {
             }}
           >
             <Typography fontWeight="700" color="#fff">
-              Tentar Novamente
+              200 coins
             </Typography>
           </TouchableOpacity>
 
