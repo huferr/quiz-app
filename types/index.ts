@@ -4,10 +4,10 @@ export interface Question {
   id: number;
   img_url: string;
   level: number;
-  opt_four: string;
   opt_one: string;
-  opt_three: string;
   opt_two: string;
+  opt_three: string;
+  opt_four: string;
   title: string;
   type: string;
 }
@@ -22,4 +22,6 @@ export interface User {
   wrong_answers: number;
   streak: number;
   badges: string[] | null;
+  free_coins: number;
+  paid_coins: number;
 }

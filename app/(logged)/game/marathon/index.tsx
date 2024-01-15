@@ -9,6 +9,7 @@ import {
   useGetProfile,
   useGetSingleQuestion,
   useTimer,
+  useUpdatePaidCoins,
   useUpdateStreak,
 } from "@/hooks";
 import { isPlatform } from "@/utils";
@@ -18,6 +19,7 @@ export default function Marathon() {
   const { refetch: refetchUserData, data: userData } = useGetProfile();
   const { mutateAsync: computeAnswer } = useComputeUserAnswer();
   const { mutateAsync: updateStreak } = useUpdateStreak();
+  const { mutateAsync: updatePaidCoins } = useUpdatePaidCoins();
 
   const [selectedOption, setSelectedOption] = useState("");
   const [streak, setStreak] = useState(0);
@@ -38,6 +40,8 @@ export default function Marathon() {
   const question = data?.title;
 
   const userCurrentStreak = userData?.streak || 0;
+
+  const userPaidCoins = userData?.paid_coins || 0;
 
   const options = data
     ? [data?.opt_one, data?.opt_two, data?.opt_three, data?.opt_four]
@@ -167,6 +171,11 @@ export default function Marathon() {
           <TouchableOpacity
             onPress={async () => {
               setSelectedOption("");
+
+              if (userPaidCoins < 200) return;
+
+              await updatePaidCoins({ type: "remove", value: 200 });
+
               await refetch().then(() => {
                 resetClock();
               });

@@ -110,6 +110,64 @@ export const useUpdateStreak = () => {
   });
 };
 
+export const useUpdateFreeCoins = () => {
+  const { userId } = useAuth();
+
+  const fetcher = async ({
+    value,
+    type,
+  }: {
+    value: number;
+    type: "add" | "remove";
+  }) => {
+    try {
+      const response = await api.post("/user/update-free-coins", {
+        userId,
+        type,
+        value,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useMutation({
+    mutationKey: ["useUpdateFreeCoins", userId],
+    mutationFn: fetcher,
+  });
+};
+
+export const useUpdatePaidCoins = () => {
+  const { userId } = useAuth();
+
+  const fetcher = async ({
+    value,
+    type,
+  }: {
+    value: number;
+    type: "add" | "remove";
+  }) => {
+    try {
+      const response = await api.post("/user/update-paid-coins", {
+        userId,
+        type,
+        value,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useMutation({
+    mutationKey: ["useUpdateFreeCoins", userId],
+    mutationFn: fetcher,
+  });
+};
+
 export function useInterval(
   callback: () => void,
   delay: number | null,
