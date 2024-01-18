@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
 import { router } from "expo-router";
-import { ShoppingCartIcon } from "lucide-react-native";
+import { MedalIcon, ShoppingCartIcon } from "lucide-react-native";
 import { HomeIcon, PlayIcon, User } from "lucide-react-native";
 import { HOME_ROUTES } from "@/constants";
 import { isPlatform } from "@/utils";
@@ -14,6 +14,7 @@ export function TabNavigator(props: BottomTabBarProps) {
 
   const icons: { [x: string]: (color: string) => React.JSX.Element } = {
     index: (color) => <HomeIcon color={color || "#000"} />,
+    ranking: (color) => <MedalIcon color={color || "#000"} />,
     profile: (color) => <User color={color || "#000"} />,
     play: (color) => <PlayIcon color={color || "#000"} />,
     store: (color) => <ShoppingCartIcon color={color || "#000"} />,

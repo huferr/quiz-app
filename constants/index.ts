@@ -1,6 +1,6 @@
 export const ROUTES = {
-  SIGN_IN: '/auth/sign-in',
-  HOME: '/home',
+  SIGN_IN: "/auth/sign-in",
+  HOME: "/home",
 };
 
-export const HOME_ROUTES = ['index', 'play', 'store', 'profile']
+export const HOME_ROUTES = ["index", "ranking", "play", "store", "profile"];

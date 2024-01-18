@@ -1,7 +1,8 @@
+import { useContext, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+
 import { api } from "@/api";
 import { Question, User } from "@/types";
-import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "@/providers/AuthProvider";
 
 export const useAuth = () => useContext(AuthContext);
@@ -166,6 +167,24 @@ export const useUpdatePaidCoins = () => {
     mutationKey: ["useUpdateFreeCoins", userId],
     mutationFn: fetcher,
   });
+};
+
+export const useGetGlobalRanking = () => {
+  type Ranking = User & { rank: number };
+
+  const fetcher = async () => {
+    try {
+      const response = await api.get<{ data: Ranking[] }>(
+        "/user/ranking/global"
+      );
+
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useQuery({ queryKey: ["useGetGlobalRanking"], queryFn: fetcher });
 };
 
 export function useInterval(

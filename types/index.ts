@@ -24,4 +24,5 @@ export interface User {
   badges: string[] | null;
   free_coins: number;
   paid_coins: number;
+  points: number;
 }

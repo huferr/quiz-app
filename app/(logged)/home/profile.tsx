@@ -10,6 +10,7 @@ export default function Profile() {
   const badges = data?.badges || [];
   const freeCoins = data?.free_coins || 0;
   const paidCoins = data?.paid_coins || 0;
+  const points = data?.points || 0;
 
   const calcRate = (correctAnswers / (correctAnswers + wrongAnswers)) * 100;
 
@@ -33,6 +34,7 @@ export default function Profile() {
       <Typography>Badges: {badges.map((badge) => `${badge} `)}</Typography>
       <Typography>Paid Coins: {paidCoins}</Typography>
       <Typography>Free Coins: {freeCoins}</Typography>
+      <Typography>Points: {points}</Typography>
     </SafeView>
   );
 }
