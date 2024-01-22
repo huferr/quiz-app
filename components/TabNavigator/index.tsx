@@ -1,13 +1,15 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { MedalIcon, ShoppingCartIcon } from "lucide-react-native";
 import { HomeIcon, PlayIcon, User } from "lucide-react-native";
 import { HOME_ROUTES } from "@/constants";
-import { isPlatform } from "@/utils";
 
 import styled from "styled-components/native";
 
 export function TabNavigator(props: BottomTabBarProps) {
+  const { bottom } = useSafeAreaInsets();
+
   const homeRoutes = props.state.routes.filter((route) =>
     HOME_ROUTES.some((homeRoute) => homeRoute.includes(route.name))
   );
@@ -28,7 +30,7 @@ export function TabNavigator(props: BottomTabBarProps) {
   const currentRoute = props.navigation.getState().index;
 
   return (
-    <Container>
+    <Container bottom={bottom}>
       {homeRoutes.map((route, index) => {
         return (
           <IconButton key={route.key} onPress={() => handleClick(route)}>
@@ -42,15 +44,17 @@ export function TabNavigator(props: BottomTabBarProps) {
   );
 }
 
-const Container = styled.View`
+const Container = styled.View<{ bottom: number }>`
   padding: 16px 24px;
-  padding-bottom: ${isPlatform("ios") ? 32 : 16}px;
+  padding-bottom: ${(props) => props.bottom || 16}px;
   flex-direction: row;
   justify-content: space-between;
   border-top-width: 1px;
   border-top-style: solid;
   border-top-color: #e7e7e7;
   background-color: #fff;
+  position: relative;
+  bottom: 0;
 `;
 
 const IconButton = styled.TouchableOpacity`

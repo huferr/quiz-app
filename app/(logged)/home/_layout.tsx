@@ -8,7 +8,7 @@ export default function RootLayout() {
       screenOptions={{
         headerShown: false,
       }}
-      tabBar={TabNavigator}
+      tabBar={(props) => <TabNavigator {...props} />}
     />
   );
 }

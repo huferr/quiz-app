@@ -187,6 +187,50 @@ export const useGetGlobalRanking = () => {
   return useQuery({ queryKey: ["useGetGlobalRanking"], queryFn: fetcher });
 };
 
+export const useStartBattle = () => {
+  const { userId } = useAuth();
+  const { data: currentUserData } = useGetProfile();
+
+  const userLevel = currentUserData?.level || 1;
+
+  interface Props {
+    opponentId?: string;
+  }
+
+  const fetcher = async ({ opponentId }: Props) => {
+    try {
+      const response = await api.post("/battle/start", {
+        userId,
+        userLevel,
+        opponentId,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useMutation({
+    mutationKey: ["useStartBattle", userId],
+    mutationFn: fetcher,
+  });
+};
+
+export const useGetBattle = (battleId: number) => {
+  const fetcher = async () => {
+    try {
+      const response = await api.get(`/battle/${battleId}`);
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useQuery({ queryKey: ["useGetBattle"], queryFn: fetcher });
+};
+
 export function useInterval(
   callback: () => void,
   delay: number | null,

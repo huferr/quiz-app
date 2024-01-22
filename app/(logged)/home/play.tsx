@@ -11,6 +11,12 @@ export default function Play() {
       <Typography>Selecione o modo de jogo:</Typography>
 
       <TouchableOpacity
+        onPress={() => router.push("/game/battle/onboarding")}
+      >
+        <Typography fontWeight="700">Batalha 1 vs 1</Typography>
+      </TouchableOpacity>
+
+      <TouchableOpacity
         onPress={() => router.push("/game/marathon/onboarding")}
       >
         <Typography fontWeight="700">Maratona</Typography>

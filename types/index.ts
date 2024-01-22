@@ -25,4 +25,5 @@ export interface User {
   free_coins: number;
   paid_coins: number;
   points: number;
+  level: number;
 }
