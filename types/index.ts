@@ -27,3 +27,12 @@ export interface User {
   points: number;
   level: number;
 }
+
+export interface Battle {
+  id: number;
+  user_id: string;
+  opponent_id: string;
+  round_owner: string;
+  my_score: number;
+  opponent_score: number;
+}

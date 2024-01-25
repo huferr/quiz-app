@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { api } from "@/api";
-import { Question, User } from "@/types";
+import { Battle, Question, User } from "@/types";
 import { AuthContext } from "@/providers/AuthProvider";
 
 export const useAuth = () => useContext(AuthContext);
@@ -57,6 +57,7 @@ export const useGetProfile = () => {
     queryFn: fetcher,
     staleTime: Infinity,
     refetchOnMount: "always",
+    enabled: !!userId,
   });
 };
 
@@ -217,6 +218,37 @@ export const useStartBattle = () => {
   });
 };
 
+export const useUpdateBattle = () => {
+  const { userId } = useAuth();
+  const fetcher = async ({
+    battleId,
+    changeOwner,
+    value,
+  }: {
+    battleId: number;
+    changeOwner?: boolean;
+    value: number;
+  }) => {
+    try {
+      const response = await api.post("/battle/update", {
+        userId,
+        battleId,
+        changeOwner,
+        value,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useMutation({
+    mutationKey: ["useUpdateBattle"],
+    mutationFn: fetcher,
+  });
+};
+
 export const useGetBattle = (battleId: number) => {
   const fetcher = async () => {
     try {
@@ -229,6 +261,24 @@ export const useGetBattle = (battleId: number) => {
   };
 
   return useQuery({ queryKey: ["useGetBattle"], queryFn: fetcher });
+};
+
+export const useGetOpenBattles = () => {
+  const { userId } = useAuth();
+
+  const fetcher = async () => {
+    try {
+      const response = await api.get<{ battles: Battle[] }>(
+        `/battle/open/${userId}`
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return useQuery({ queryKey: ["useGetOpenBattles"], queryFn: fetcher });
 };
 
 export function useInterval(

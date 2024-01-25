@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import styled from "styled-components/native";
 
@@ -8,12 +8,23 @@ import { useGetBattle, useGetProfile } from "@/hooks";
 
 export default function Battle() {
   const { id } = useLocalSearchParams();
+  const { data: userData } = useGetProfile();
+  const { data: battleData } = useGetBattle(Number(id));
 
-  console.log("id", id);
+  const opponent = battleData?.opponent;
+  const opponentUsername = opponent?.username;
+  const opponentScore = battleData?.battle?.opponent_score;
 
-  const { data } = useGetBattle(Number(id));
+  const username = userData?.username;
+  const myScore = battleData?.battle?.my_score;
 
-  console.log("battle =>>>>", data);
+  const isYourTurn = battleData?.battle?.round_owner === userData?.id;
+
+  console.log("battle =>>>>", battleData);
+
+  const handleGoToQuestion = () => {
+    router.push({ pathname: "/game/battle/question", params: { id } });
+  };
 
   return (
     <SafeView
@@ -48,8 +59,32 @@ export default function Battle() {
           textAlign="center"
           marginTop={24}
         >
-          Player vs Player
+          {username} ({myScore}) vs ({opponentScore}) {opponentUsername}
         </Typography>
+
+        {isYourTurn ? (
+          <Pressable onPress={handleGoToQuestion}>
+            <Typography
+              fontWeight="700"
+              fontSize={24}
+              color="#fff"
+              textAlign="center"
+              marginTop={24}
+            >
+              Jogar
+            </Typography>
+          </Pressable>
+        ) : (
+          <Typography
+            fontWeight="700"
+            fontSize={16}
+            color="#fff"
+            textAlign="center"
+            marginTop={24}
+          >
+            Espere a vez do seu oponente
+          </Typography>
+        )}
       </Content>
     </SafeView>
   );
