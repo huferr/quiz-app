@@ -1,16 +1,16 @@
-import { TouchableOpacity } from "react-native";
-import { router } from "expo-router";
-import styled from "styled-components/native";
+import { TouchableOpacity } from "react-native"
+import { router } from "expo-router"
+import styled from "styled-components/native"
 
-import { FullModal, SafeView, Typography } from "@/components";
-import { isPlatform } from "@/utils";
-import { useStartBattle } from "@/hooks";
-import { useState } from "react";
+import { FullModal, SafeView, Typography } from "@/components"
+import { isPlatform } from "@/utils"
+import { useStartBattle } from "@/hooks"
+import { useState } from "react"
 
 export default function BattleOnboarding() {
-  const [isRandom, setIsRandom] = useState(false);
+  const [isRandom, setIsRandom] = useState(false)
 
-  const { mutateAsync: handleStartBattle, isPending } = useStartBattle();
+  const { mutateAsync: handleStartBattle, isPending } = useStartBattle()
 
   return (
     <SafeView
@@ -32,12 +32,12 @@ export default function BattleOnboarding() {
 
         <TouchableOpacity
           onPress={async () => {
-            setIsRandom(true);
-            const response = await handleStartBattle({});
+            setIsRandom(true)
+            const response = await handleStartBattle({})
 
-            console.log("response", response);
+            console.log("response", response)
 
-            router.push(`/game/battle/${response.battle.id}`);
+            router.push(`/game/battle/${response.battle.id}`)
           }}
         >
           <Typography
@@ -71,23 +71,23 @@ export default function BattleOnboarding() {
         </FullModal>
       )}
     </SafeView>
-  );
+  )
 }
 
 const Header = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-`;
+`
 
 const Content = styled.View`
   align-items: center;
   padding-top: 48px;
-`;
+`
 
 const LoadingContainer = styled.View`
   flex: 1;
   background-color: rgba(0, 0, 0, 0.8);
   align-items: center;
   justify-content: center;
-`;
+`

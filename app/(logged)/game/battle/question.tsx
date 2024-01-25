@@ -1,81 +1,81 @@
-import { TouchableOpacity } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
-import styled from "styled-components/native";
+import { TouchableOpacity } from "react-native"
+import { router, useLocalSearchParams } from "expo-router"
+import styled from "styled-components/native"
 
-import { FullModal, SafeView, Typography } from "@/components";
-import { isPlatform } from "@/utils";
+import { FullModal, SafeView, Typography } from "@/components"
+import { isPlatform } from "@/utils"
 import {
   useComputeUserAnswer,
   useGetBattle,
   useGetSingleQuestion,
   useTimer,
-  useUpdateBattle,
-} from "@/hooks";
-import { useState } from "react";
+  useUpdateBattle
+} from "@/hooks"
+import { useState } from "react"
 
 export default function QuestionScreen() {
-  const { data: question, isLoading } = useGetSingleQuestion();
-  const { mutateAsync: computeAnswer } = useComputeUserAnswer();
-  const { mutateAsync: handleUpdateBattle } = useUpdateBattle();
-  const { id: battleId } = useLocalSearchParams();
-  const { refetch: refetchBattle } = useGetBattle(Number(battleId));
+  const { data: question, isLoading } = useGetSingleQuestion()
+  const { mutateAsync: computeAnswer } = useComputeUserAnswer()
+  const { mutateAsync: handleUpdateBattle } = useUpdateBattle()
+  const { id: battleId } = useLocalSearchParams()
+  const { refetch: refetchBattle } = useGetBattle(Number(battleId))
 
   const { clock, pause: pauseClock } = useTimer(20, {
     onFinish: () => {
-      pauseClock();
-      setOpenReview(true);
-    },
-  });
-  const [selectedOption, setSelectedOption] = useState("");
-  const [openReview, setOpenReview] = useState(false);
-  const [lose, setLose] = useState(false);
+      pauseClock()
+      setOpenReview(true)
+    }
+  })
+  const [selectedOption, setSelectedOption] = useState("")
+  const [openReview, setOpenReview] = useState(false)
+  const [lose, setLose] = useState(false)
 
-  const title = question?.title;
-  const answer = question?.answer;
+  const title = question?.title
+  const answer = question?.answer
 
   const options = question
     ? [
         question?.opt_one,
         question?.opt_two,
         question?.opt_three,
-        question?.opt_four,
+        question?.opt_four
       ]
-    : [];
+    : []
 
   const handleOnSelectOption = async (opt: string) => {
-    setSelectedOption(opt);
-    pauseClock();
+    setSelectedOption(opt)
+    pauseClock()
 
-    const correctOption = opt === answer;
+    const correctOption = opt === answer
 
     if (correctOption) {
-      setLose(false);
-      setOpenReview(true);
+      setLose(false)
+      setOpenReview(true)
 
       await handleUpdateBattle({
         battleId: Number(battleId),
         value: 1,
-        changeOwner: false,
+        changeOwner: false
       }).then(() => {
-        refetchBattle();
-      });
+        refetchBattle()
+      })
 
-      await computeAnswer({ type: "correct", value: 1 });
+      await computeAnswer({ type: "correct", value: 1 })
 
-      return;
+      return
     }
-    setLose(true);
-    setOpenReview(true);
+    setLose(true)
+    setOpenReview(true)
 
     await handleUpdateBattle({
       battleId: Number(battleId),
       value: 1,
-      changeOwner: true,
+      changeOwner: true
     }).then(() => {
-      refetchBattle();
-    });
-    await computeAnswer({ type: "wrong", value: 1 });
-  };
+      refetchBattle()
+    })
+    await computeAnswer({ type: "wrong", value: 1 })
+  }
 
   return (
     <SafeView
@@ -97,7 +97,7 @@ export default function QuestionScreen() {
         </Typography>
         <OptionsContainer>
           {options.map((option) => {
-            const isSelectedCorrect = selectedOption === answer;
+            const isSelectedCorrect = selectedOption === answer
 
             return (
               <OptionButton
@@ -111,7 +111,7 @@ export default function QuestionScreen() {
               >
                 <Typography fontWeight="700">{option}</Typography>
               </OptionButton>
-            );
+            )
           })}
         </OptionsContainer>
       </Content>
@@ -124,7 +124,7 @@ export default function QuestionScreen() {
 
           <TouchableOpacity
             onPress={() => {
-              router.push(`/game/battle/${battleId}`);
+              router.push(`/game/battle/${battleId}`)
             }}
           >
             <Typography fontWeight="700" color="#fff">
@@ -134,50 +134,50 @@ export default function QuestionScreen() {
         </ReviewContainer>
       </FullModal>
     </SafeView>
-  );
+  )
 }
 
 const Header = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-`;
+`
 
 const Content = styled.View`
   align-items: center;
   padding-top: 48px;
-`;
+`
 
 const ReviewContainer = styled.View`
   flex: 1;
   background-color: rgba(0, 0, 0, 0.8);
   padding-top: 40px;
   align-items: center;
-`;
+`
 
 const OptionsContainer = styled.View`
   width: 100%;
   margin-top: 24px;
   gap: 24px;
-`;
+`
 
 const OptionButton = styled.TouchableOpacity<{
-  isSelectedCorrect: boolean | undefined;
-  correctAnswer: boolean;
-  isSelectedOption: boolean;
+  isSelectedCorrect: boolean | undefined
+  correctAnswer: boolean
+  isSelectedOption: boolean
 }>`
   padding: 6px 48px;
   width: 100%;
   border-radius: 8px;
   background-color: ${(p) => {
-    if (!p.disabled) return "#fff";
+    if (!p.disabled) return "#fff"
 
     if (p.correctAnswer || (p.isSelectedCorrect && p.isSelectedOption))
-      return "#48B117";
+      return "#48B117"
 
-    if (!p.isSelectedCorrect && p.isSelectedOption) return "#c53030";
+    if (!p.isSelectedCorrect && p.isSelectedOption) return "#c53030"
 
-    return "#fff";
+    return "#fff"
   }};
   align-items: center;
-`;
+`

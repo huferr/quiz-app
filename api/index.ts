@@ -1,26 +1,21 @@
-import "react-native-url-polyfill/auto";
-import axios from "axios";
-import { isPlatform } from "../utils";
-import { createClient } from "@supabase/supabase-js";
-import * as SecureStore from "expo-secure-store";
+import "react-native-url-polyfill/auto"
+import * as SecureStore from "expo-secure-store"
+import { createClient } from "@supabase/supabase-js"
+import axios from "axios"
+
+import { isPlatform } from "../utils"
 
 export const api = axios.create({
   baseURL: isPlatform("android")
     ? "http://10.0.2.2:8080/"
-    : "http://localhost:8080/",
-});
+    : "https://bac5-2804-d45-3650-eb00-c2f-1f4f-d20c-aaf.ngrok-free.app"
+})
 
 const ExpoSecureStoreAdapter = {
-  getItem: (key: string) => {
-    return SecureStore.getItemAsync(key);
-  },
-  setItem: (key: string, value: string) => {
-    SecureStore.setItemAsync(key, value);
-  },
-  removeItem: (key: string) => {
-    SecureStore.deleteItemAsync(key);
-  },
-};
+  getItem: (key: string) => SecureStore.getItemAsync(key),
+  setItem: (key: string, value: string) => SecureStore.setItemAsync(key, value),
+  removeItem: (key: string) => SecureStore.deleteItemAsync(key)
+}
 
 export const supabase = createClient(
   "https://jnlfiaithtwymoiibqis.supabase.co",
@@ -29,7 +24,7 @@ export const supabase = createClient(
     auth: {
       storage: ExpoSecureStoreAdapter,
       autoRefreshToken: true,
-      persistSession: true,
-    },
+      persistSession: true
+    }
   }
-);
+)

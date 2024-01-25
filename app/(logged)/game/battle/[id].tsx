@@ -1,30 +1,30 @@
-import { Pressable, TouchableOpacity } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
-import styled from "styled-components/native";
+import { Pressable, TouchableOpacity } from "react-native"
+import { router, useLocalSearchParams } from "expo-router"
+import styled from "styled-components/native"
 
-import { SafeView, Typography } from "@/components";
-import { isPlatform } from "@/utils";
-import { useGetBattle, useGetProfile } from "@/hooks";
+import { SafeView, Typography } from "@/components"
+import { isPlatform } from "@/utils"
+import { useGetBattle, useGetProfile } from "@/hooks"
 
 export default function Battle() {
-  const { id } = useLocalSearchParams();
-  const { data: userData } = useGetProfile();
-  const { data: battleData } = useGetBattle(Number(id));
+  const { id } = useLocalSearchParams()
+  const { data: userData } = useGetProfile()
+  const { data: battleData } = useGetBattle(Number(id))
 
-  const opponent = battleData?.opponent;
-  const opponentUsername = opponent?.username;
-  const opponentScore = battleData?.battle?.opponent_score;
+  const opponent = battleData?.opponent
+  const opponentUsername = opponent?.username
+  const opponentScore = battleData?.battle?.opponent_score
 
-  const username = userData?.username;
-  const myScore = battleData?.battle?.my_score;
+  const username = userData?.username
+  const myScore = battleData?.battle?.my_score
 
-  const isYourTurn = battleData?.battle?.round_owner === userData?.id;
+  const isYourTurn = battleData?.battle?.round_owner === userData?.id
 
-  console.log("battle =>>>>", battleData);
+  console.log("battle =>>>>", battleData)
 
   const handleGoToQuestion = () => {
-    router.push({ pathname: "/game/battle/question", params: { id } });
-  };
+    router.push({ pathname: "/game/battle/question", params: { id } })
+  }
 
   return (
     <SafeView
@@ -87,16 +87,16 @@ export default function Battle() {
         )}
       </Content>
     </SafeView>
-  );
+  )
 }
 
 const Header = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-`;
+`
 
 const Content = styled.View`
   align-items: center;
   padding-top: 48px;
-`;
+`
