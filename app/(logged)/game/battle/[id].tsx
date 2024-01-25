@@ -20,8 +20,6 @@ export default function Battle() {
 
   const isYourTurn = battleData?.battle?.round_owner === userData?.id
 
-  console.log("battle =>>>>", battleData)
-
   const handleGoToQuestion = () => {
     router.push({ pathname: "/game/battle/question", params: { id } })
   }

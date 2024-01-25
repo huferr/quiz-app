@@ -50,7 +50,7 @@ export default function QuestionScreen() {
 
     if (correctOption) {
       setLose(false)
-      setOpenReview(true)
+      setTimeout(() => setOpenReview(true), 250)
 
       await handleUpdateBattle({
         battleId: Number(battleId),
@@ -69,7 +69,7 @@ export default function QuestionScreen() {
 
     await handleUpdateBattle({
       battleId: Number(battleId),
-      value: 1,
+      value: 0,
       changeOwner: true
     }).then(() => {
       refetchBattle()

@@ -2,7 +2,7 @@ import { TouchableOpacity } from "react-native"
 import { router } from "expo-router"
 import styled from "styled-components/native"
 
-import { FullModal, SafeView, Typography } from "@/components"
+import { SafeView, Typography, LoadingScreen } from "@/components"
 import { isPlatform } from "@/utils"
 import { useStartBattle } from "@/hooks"
 import { useState } from "react"
@@ -63,13 +63,7 @@ export default function BattleOnboarding() {
         </TouchableOpacity>
       </Content>
 
-      {isRandom && isPending && (
-        <FullModal>
-          <LoadingContainer>
-            <Typography color="#fff">Procurando jogador...</Typography>
-          </LoadingContainer>
-        </FullModal>
-      )}
+      {isRandom && isPending && <LoadingScreen />}
     </SafeView>
   )
 }
