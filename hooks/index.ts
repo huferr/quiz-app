@@ -35,7 +35,8 @@ export const useGetSingleQuestion = () => {
   return useQuery({
     queryKey: ["useGetSingleQuestion"],
     queryFn: fetcher,
-    staleTime: Infinity
+    staleTime: Infinity,
+    gcTime: 0
   })
 }
 
