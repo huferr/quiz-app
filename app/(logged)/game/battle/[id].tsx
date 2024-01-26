@@ -2,26 +2,36 @@ import { Pressable, TouchableOpacity } from "react-native"
 import { router, useLocalSearchParams } from "expo-router"
 import styled from "styled-components/native"
 
-import { SafeView, Typography } from "@/components"
-import { isPlatform } from "@/utils"
+import { LoadingScreen, SafeView, Typography } from "@/components"
+import { isPlatform, userIsOpponent } from "@/utils"
 import { useGetBattle, useGetProfile } from "@/hooks"
 
 export default function Battle() {
   const { id } = useLocalSearchParams()
   const { data: userData } = useGetProfile()
-  const { data: battleData } = useGetBattle(Number(id))
+  const { data: battleData, isLoading } = useGetBattle(Number(id))
 
   const opponent = battleData?.opponent
   const opponentUsername = opponent?.username
-  const opponentScore = battleData?.battle?.opponent_score
+
+  const opponentScore = userIsOpponent(battleData?.battle!, userData!)
+    ? battleData?.battle?.my_score
+    : battleData?.battle?.opponent_score
 
   const username = userData?.username
-  const myScore = battleData?.battle?.my_score
+
+  const myScore = userIsOpponent(battleData!, userData!)
+    ? battleData?.battle?.opponent_score
+    : battleData?.battle?.my_score
 
   const isYourTurn = battleData?.battle?.round_owner === userData?.id
 
   const handleGoToQuestion = () => {
     router.push({ pathname: "/game/battle/question", params: { id } })
+  }
+
+  if (isLoading) {
+    return <LoadingScreen />
   }
 
   return (

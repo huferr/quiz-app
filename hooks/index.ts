@@ -251,9 +251,11 @@ export const useUpdateBattle = () => {
 }
 
 export const useGetBattle = (battleId: number) => {
+  const { userId } = useAuth()
+
   const fetcher = async () => {
     try {
-      const response = await api.get(`/battle/${battleId}`)
+      const response = await api.get(`/battle/${battleId}?userId=${userId}`)
 
       return response.data
     } catch (error) {
@@ -261,7 +263,7 @@ export const useGetBattle = (battleId: number) => {
     }
   }
 
-  return useQuery({ queryKey: ["useGetBattle"], queryFn: fetcher })
+  return useQuery({ queryKey: ["useGetBattle", battleId], queryFn: fetcher })
 }
 
 export const useGetOpenBattles = () => {

@@ -5,6 +5,8 @@ import styled from "styled-components/native"
 import { SafeView, Typography } from "@/components"
 import { useGetOpenBattles, useGetProfile } from "@/hooks"
 import { useState } from "react"
+import { Battle } from "@/types"
+import { userIsOpponent } from "@/utils"
 
 export default function Page() {
   const { data: userData, refetch: refetchUserData } = useGetProfile()
@@ -23,6 +25,20 @@ export default function Page() {
     setRefreshing(false)
   }
 
+  const yourTurnBattles = openBattles?.filter(
+    (battle) => battle.round_owner === userData?.id
+  )
+
+  const oppponentTurnBattles = openBattles?.filter(
+    (battle) => battle.round_owner !== userData?.id
+  )
+
+  const myScore = (battle: Battle) =>
+    userIsOpponent(battle, userData!) ? battle.opponent_score : battle.my_score
+
+  const opponentScore = (battle: Battle) =>
+    userIsOpponent(battle, userData!) ? battle.my_score : battle.opponent_score
+
   return (
     <SafeView>
       <Container
@@ -30,11 +46,13 @@ export default function Page() {
           <RefreshControl onRefresh={handleOnRefresh} refreshing={refreshing} />
         }
       >
-        <Typography>Home</Typography>
-        <Typography>Olá, {username}</Typography>
+        <Typography marginBottom={24}>Olá, {username}!</Typography>
 
-        {openBattles?.map((battle) => {
-          const isMyTurn = battle.round_owner === userData?.id
+        <Typography marginBottom={24} fontWeight="700">
+          Batalhas
+        </Typography>
+
+        {yourTurnBattles?.map((battle) => {
           return (
             <Pressable
               key={battle.id}
@@ -50,11 +68,30 @@ export default function Page() {
               }}
             >
               <Typography>{battle.id} | </Typography>
-              <Typography>{battle.my_score} : </Typography>
-              <Typography>{battle.opponent_score} | </Typography>
-              <Typography>
-                {isMyTurn ? "Sua vez" : "Vez do oponente"}
-              </Typography>
+              <Typography>{myScore(battle)} : </Typography>
+              <Typography>{opponentScore(battle)}</Typography>
+            </Pressable>
+          )
+        })}
+
+        <Typography marginBottom={24} marginTop={24} fontWeight="700">
+          Esperando pelo oponente
+        </Typography>
+
+        {oppponentTurnBattles?.map((battle) => {
+          return (
+            <Pressable
+              key={battle.id}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                marginBottom: 10
+              }}
+            >
+              <Typography>{battle.id} | </Typography>
+              <Typography>{myScore(battle)} : </Typography>
+              <Typography>{opponentScore(battle)} | </Typography>
+              <Typography>Vez do oponente</Typography>
             </Pressable>
           )
         })}
