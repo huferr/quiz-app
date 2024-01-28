@@ -20,7 +20,7 @@ export default function Battle() {
 
   const username = userData?.username
 
-  const myScore = userIsOpponent(battleData!, userData!)
+  const myScore = userIsOpponent(battleData?.battle!, userData!)
     ? battleData?.battle?.opponent_score
     : battleData?.battle?.my_score
 
@@ -67,7 +67,7 @@ export default function Battle() {
           textAlign="center"
           marginTop={24}
         >
-          {username} ({myScore}) vs ({opponentScore}) {opponentUsername}
+          Você ({myScore}) vs ({opponentScore}) {opponentUsername}
         </Typography>
 
         {isYourTurn ? (
