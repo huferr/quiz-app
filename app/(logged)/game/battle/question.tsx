@@ -8,9 +8,10 @@ import {
   useComputeUserAnswer,
   useGetBattle,
   useGetSingleQuestion,
-  useTimer,
   useUpdateBattle
 } from "@/hooks"
+
+import { useTimer } from "@/utils"
 import { useState } from "react"
 
 export default function QuestionScreen() {
