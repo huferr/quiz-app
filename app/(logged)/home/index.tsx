@@ -26,11 +26,11 @@ export default function Page() {
   }
 
   const yourTurnBattles = openBattles?.filter(
-    (battle) => battle.round_owner === userData?.id
+    (battle) => battle.round_owner === userData?.id || battle.winner_id !== null
   )
 
   const oppponentTurnBattles = openBattles?.filter(
-    (battle) => battle.round_owner !== userData?.id
+    (battle) => battle.round_owner !== userData?.id && battle.winner_id === null
   )
 
   const myScore = (battle: Battle) =>
@@ -53,10 +53,15 @@ export default function Page() {
         </Typography>
 
         {yourTurnBattles?.map((battle) => {
+          const won = battle.winner_id && battle.winner_id === userData?.id
+
+          const lost = battle.winner_id && battle.winner_id !== userData?.id
+
           return (
             <Pressable
               key={battle.id}
               onPress={() => {
+                if (won || lost) return
                 router.push({
                   pathname: `game/battle/${battle.id}`
                 })
@@ -70,6 +75,8 @@ export default function Page() {
               <Typography>{battle.id} | </Typography>
               <Typography>{myScore(battle)} : </Typography>
               <Typography>{opponentScore(battle)}</Typography>
+              {won && <Typography> Você venceu!</Typography>}
+              {lost && <Typography> Você perdeu!</Typography>}
             </Pressable>
           )
         })}

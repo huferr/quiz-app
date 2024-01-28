@@ -224,18 +224,24 @@ export const useUpdateBattle = () => {
   const fetcher = async ({
     battleId,
     changeOwner,
-    value
+    value,
+    winnerId,
+    finished
   }: {
     battleId: number
     changeOwner?: boolean
     value: number
+    finished?: boolean
+    winnerId?: string
   }) => {
     try {
       const response = await api.post("/battle/update", {
         userId,
         battleId,
         changeOwner,
-        value
+        value,
+        winnerId,
+        finished
       })
 
       return response.data

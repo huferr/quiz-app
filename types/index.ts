@@ -35,4 +35,6 @@ export interface Battle {
   round_owner: string
   my_score: number
   opponent_score: number
+  finished: boolean
+  winner_id: string
 }
