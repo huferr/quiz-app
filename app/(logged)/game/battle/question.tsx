@@ -12,7 +12,7 @@ import {
 } from "@/hooks"
 
 import { useTimer } from "@/utils"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export default function QuestionScreen() {
   const { data: question, isLoading } = useGetSingleQuestion()
