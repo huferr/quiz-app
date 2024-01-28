@@ -12,7 +12,7 @@ import {
 } from "@/hooks"
 
 import { useTimer } from "@/utils"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function QuestionScreen() {
   const { data: question, isLoading } = useGetSingleQuestion()
@@ -22,9 +22,8 @@ export default function QuestionScreen() {
   const { refetch: refetchBattle } = useGetBattle(Number(battleId))
 
   const { clock, pause: pauseClock } = useTimer(20, {
-    onFinish: () => {
-      pauseClock()
-      setOpenReview(true)
+    onFinish: async () => {
+      await handleOnLose()
     }
   })
   const [selectedOption, setSelectedOption] = useState("")
@@ -43,6 +42,20 @@ export default function QuestionScreen() {
       ]
     : []
 
+  const handleOnLose = async () => {
+    setLose(true)
+    setTimeout(() => setOpenReview(true), 250)
+
+    await handleUpdateBattle({
+      battleId: Number(battleId),
+      value: 0,
+      changeOwner: true
+    }).then(async () => {
+      await refetchBattle()
+    })
+
+    await computeAnswer({ type: "wrong", value: 1 })
+  }
   const handleOnSelectOption = async (opt: string) => {
     setSelectedOption(opt)
     pauseClock()
@@ -57,25 +70,16 @@ export default function QuestionScreen() {
         battleId: Number(battleId),
         value: 1,
         changeOwner: false
-      }).then(() => {
-        refetchBattle()
+      }).then(async () => {
+        await refetchBattle()
       })
 
       await computeAnswer({ type: "correct", value: 1 })
 
       return
     }
-    setLose(true)
-    setOpenReview(true)
 
-    await handleUpdateBattle({
-      battleId: Number(battleId),
-      value: 0,
-      changeOwner: true
-    }).then(() => {
-      refetchBattle()
-    })
-    await computeAnswer({ type: "wrong", value: 1 })
+    await handleOnLose()
   }
 
   return (

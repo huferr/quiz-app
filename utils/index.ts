@@ -44,10 +44,10 @@ export function useTimer(time: number, options?: { onFinish?: () => void }) {
   )
 
   useEffect(() => {
-    if (options && options.onFinish && clock === 0) {
-      options.onFinish()
+    if (clock === 0) {
+      options?.onFinish?.()
     }
-  }, [clock, options?.onFinish])
+  }, [clock])
 
   const resetClock = (newTime = time) => {
     setClock(newTime)
