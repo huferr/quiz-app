@@ -78,10 +78,3 @@ const Content = styled.View`
   align-items: center;
   padding-top: 48px;
 `
-
-const LoadingContainer = styled.View`
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.8);
-  align-items: center;
-  justify-content: center;
-`

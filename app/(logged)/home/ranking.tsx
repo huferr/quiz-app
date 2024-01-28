@@ -1,5 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
-import { router } from "expo-router";
+import { View } from "react-native";
 
 import { SafeView, Typography } from "@/components";
 import { useGetGlobalRanking } from "@/hooks";
