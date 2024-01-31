@@ -289,3 +289,27 @@ export const useGetOpenBattles = () => {
 
   return useQuery({ queryKey: ["useGetOpenBattles"], queryFn: fetcher })
 }
+
+export const useSearchBattlePlayers = (query: string) => {
+  const { userId } = useAuth()
+
+  const fetcher = async () => {
+    if (!query) return
+
+    try {
+      const response = await api.get(
+        `/battle/player/search?query=${query}&userId=${userId}`
+      )
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  return useQuery({
+    queryKey: ["useSearchBattlePlayers", query],
+    queryFn: fetcher,
+    enabled: !!query
+  })
+}
