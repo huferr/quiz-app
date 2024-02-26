@@ -7,14 +7,14 @@ import { useGetOpenBattles, useGetProfile } from "@/hooks"
 import { useState } from "react"
 import { Battle } from "@/types"
 import { userIsOpponent } from "@/utils"
+import { PageHeader } from "@/components/PageHeader"
+import { Button } from "@/components/Button"
 
 export default function Page() {
   const { data: userData, refetch: refetchUserData } = useGetProfile()
   const { data, refetch: refetchBattles } = useGetOpenBattles()
 
   const [refreshing, setRefreshing] = useState(false)
-
-  const username = userData?.username
 
   const openBattles = data?.battles
 
@@ -41,20 +41,18 @@ export default function Page() {
 
   return (
     <SafeView>
+      <PageHeader title="Visão Geral" />
       <Container
         refreshControl={
           <RefreshControl onRefresh={handleOnRefresh} refreshing={refreshing} />
         }
       >
-        <Typography marginBottom={24}>Olá, {username}!</Typography>
-
-        <Typography marginBottom={24} fontWeight="700">
+        <Typography marginBottom={24} fontWeight="600">
           Batalhas
         </Typography>
 
         {yourTurnBattles?.map((battle) => {
           const won = battle.winner_id && battle.winner_id === userData?.id
-
           const lost = battle.winner_id && battle.winner_id !== userData?.id
 
           return (
@@ -102,9 +100,17 @@ export default function Page() {
             </Pressable>
           )
         })}
+
+        <Button marginTop={24} onPress={() => router.push("/home/play")}>
+          <Typography color="#fff" fontWeight="600">
+            Jogar
+          </Typography>
+        </Button>
       </Container>
     </SafeView>
   )
 }
 
-const Container = styled.ScrollView``
+const Container = styled.ScrollView`
+  padding: 16px 16px 0px;
+`

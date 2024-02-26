@@ -1,62 +1,43 @@
-import { TouchableOpacity } from "react-native";
-import { router } from "expo-router";
-import styled from "styled-components/native";
+import { TouchableOpacity } from "react-native"
+import { router } from "expo-router"
+import styled from "styled-components/native"
 
-import { SafeView, Typography } from "@/components";
-import { isPlatform } from "@/utils";
-import { useGetProfile } from "@/hooks";
+import { SafeView, Typography } from "@/components"
+import { useGetProfile } from "@/hooks"
+import { PageHeader } from "@/components/PageHeader"
 
 export default function MarathonOnboarding() {
+  const { data } = useGetProfile()
 
-  const { data } = useGetProfile();
+  const streak = data?.streak || 0
 
-  const streak = data?.streak || 0;
+  const onPressGoBack = () => {
+    router.push("/home/play")
+  }
 
   return (
-    <SafeView
-      paddingHorizontal={isPlatform("android") ? 16 : 24}
-      backgroundColor="#292929"
-    >
-      <Header>
-        <TouchableOpacity onPress={() => router.push("/home/play")}>
-          <Typography fontWeight="700" color="#fff">
-            Voltar
-          </Typography>
-        </TouchableOpacity>
-        <Typography color="#fff">Maratona</Typography>
-      </Header>
+    <SafeView>
+      <PageHeader title="Maratona" onPressGoBack={onPressGoBack} />
       <Content>
         <TouchableOpacity onPress={() => router.push("/game/marathon")}>
-          <Typography
-            fontWeight="700"
-            fontSize={24}
-            color="#fff"
-            textAlign="center"
-          >
+          <Typography fontWeight="700" fontSize={24} textAlign="center">
             Play
           </Typography>
         </TouchableOpacity>
         <Typography
-            fontWeight="700"
-            fontSize={24}
-            color="#fff"
-            textAlign="center"
-            marginTop={24}
-          >
-            Record: {streak}
-          </Typography>
+          fontWeight="700"
+          fontSize={24}
+          textAlign="center"
+          marginTop={24}
+        >
+          Record: {streak}
+        </Typography>
       </Content>
     </SafeView>
-  );
+  )
 }
-
-const Header = styled.View`
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 
 const Content = styled.View`
   align-items: center;
   padding-top: 48px;
-`;
+`

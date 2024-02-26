@@ -2,6 +2,10 @@ import { Typography, SafeView, LoadingScreen } from "@/components"
 import { useGetProfile } from "@/hooks"
 import { supabase } from "@/api"
 import { Pressable } from "react-native"
+import { PageHeader } from "@/components/PageHeader"
+import styled from "styled-components/native"
+import { Settings } from "lucide-react-native"
+import { router } from "expo-router"
 
 export default function Profile() {
   const { data, isLoading } = useGetProfile()
@@ -28,25 +32,39 @@ export default function Profile() {
     }
   }
 
+  const goToSettings = () => {
+    router.push("/home/settings")
+  }
+
   if (isLoading) {
     return <LoadingScreen />
   }
 
   return (
-    <SafeView paddingHorizontal={24}>
-      <Typography>Profile</Typography>
-      <Typography>Correct Answers: {correctAnswers}</Typography>
-      <Typography>Wrong Answers: {wrongAnswers}</Typography>
-      <Typography>Correct Answers Rate: {rate}</Typography>
-      <Typography>Streak: {streak}</Typography>
-      <Typography>Badges: {badges.map((badge) => `${badge} `)}</Typography>
-      <Typography>Paid Coins: {paidCoins}</Typography>
-      <Typography>Free Coins: {freeCoins}</Typography>
-      <Typography>Points: {points}</Typography>
+    <SafeView>
+      <PageHeader
+        title="Meu Perfil"
+        actionIcon={<Settings size="24px" color="#000" />}
+        onPressAction={goToSettings}
+      />
+      <Page>
+        <Typography>Correct Answers: {correctAnswers}</Typography>
+        <Typography>Wrong Answers: {wrongAnswers}</Typography>
+        <Typography>Correct Answers Rate: {rate}</Typography>
+        <Typography>Streak: {streak}</Typography>
+        <Typography>Badges: {badges.map((badge) => `${badge} `)}</Typography>
+        <Typography>Paid Coins: {paidCoins}</Typography>
+        <Typography>Free Coins: {freeCoins}</Typography>
+        <Typography>Points: {points}</Typography>
 
-      <Pressable onPress={logout}>
-        <Typography>Logout</Typography>
-      </Pressable>
+        <Pressable onPress={logout}>
+          <Typography>Logout</Typography>
+        </Pressable>
+      </Page>
     </SafeView>
   )
 }
+
+const Page = styled.View`
+  padding: 0px 16px;
+`

@@ -8,7 +8,7 @@ export default function LoggedLayout() {
   if (loading) return <Text>Loading...</Text>;
 
   if (!user) {
-    return <Redirect href="/auth/sign-in" />;
+    return <Redirect href="/auth/welcome" />;
   }
 
   return <Stack screenOptions={{ headerShown: false, animation: "none" }} />;

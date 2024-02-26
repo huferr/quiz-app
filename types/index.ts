@@ -1,3 +1,10 @@
+export interface GeneralProps {
+  mb?: number
+  mt?: number
+  ml?: number
+  mr?: number
+}
+
 export interface Question {
   answer: string
   created_at: string
