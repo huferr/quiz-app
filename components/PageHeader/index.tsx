@@ -9,6 +9,7 @@ interface Props extends GeneralProps {
   onPressAction?: () => void
   actionIcon?: React.ReactNode
   title?: string
+  centerElement?: React.ReactNode
 }
 
 export function PageHeader({ ...props }: Props) {
@@ -21,7 +22,11 @@ export function PageHeader({ ...props }: Props) {
       )}
 
       <TitleContainer>
-        <Typography fontWeight="600">{props.title}</Typography>
+        {props.centerElement ? (
+          props.centerElement
+        ) : (
+          <Typography fontWeight="600">{props.title}</Typography>
+        )}
       </TitleContainer>
 
       {props.onPressAction && (
@@ -35,7 +40,7 @@ export function PageHeader({ ...props }: Props) {
 
 const Container = styled.View<Props>`
   width: 100%;
-  height: 46px;
+  height: 48px;
   border-bottom-width: 1px;
   border-bottom-color: #d2d2d2;
   margin-bottom: ${(props) => props.mb || 0}px;
@@ -50,7 +55,7 @@ export const LeftButtonContainer = styled.TouchableOpacity`
   position: absolute;
   left: 10px;
   top: 0;
-  height: 46px;
+  height: 48px;
   align-items: center;
   justify-content: center;
 `

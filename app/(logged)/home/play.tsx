@@ -1,4 +1,3 @@
-import { TouchableOpacity } from "react-native"
 import { router } from "expo-router"
 
 import { SafeView, Typography } from "@/components"
@@ -10,19 +9,13 @@ export default function Play() {
     <SafeView>
       <PageHeader title="Modo de Jogo" />
       <Page>
-        <Typography>Selecione o modo de jogo:</Typography>
+        <Item onPress={() => router.push("/game/battle/onboarding")}>
+          <Typography fontWeight="700">Batalha 1v1</Typography>
+        </Item>
 
-        <TouchableOpacity
-          onPress={() => router.push("/game/battle/onboarding")}
-        >
-          <Typography fontWeight="700">Batalha 1 vs 1</Typography>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => router.push("/game/marathon/onboarding")}
-        >
+        <Item onPress={() => router.push("/game/marathon/onboarding")}>
           <Typography fontWeight="700">Maratona</Typography>
-        </TouchableOpacity>
+        </Item>
       </Page>
     </SafeView>
   )
@@ -30,4 +23,13 @@ export default function Play() {
 
 export const Page = styled.View`
   padding: 16px;
+  gap: 16px;
+`
+
+export const Item = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })`
+  border: 1px solid #d2d2d2;
+  padding: 16px;
+  width: 100%;
+  border-radius: 8px;
+  align-items: center;
 `

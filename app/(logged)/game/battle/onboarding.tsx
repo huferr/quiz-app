@@ -1,11 +1,11 @@
-import { TouchableOpacity } from "react-native"
 import { router } from "expo-router"
 import styled from "styled-components/native"
 
 import { SafeView, Typography, LoadingScreen } from "@/components"
-import { isPlatform } from "@/utils"
 import { useStartBattle } from "@/hooks"
 import { useState } from "react"
+import { PageHeader } from "@/components/PageHeader"
+import { Info, Shuffle, Swords, UserSearch } from "lucide-react-native"
 
 export default function BattleOnboarding() {
   const [isRandom, setIsRandom] = useState(false)
@@ -13,24 +13,21 @@ export default function BattleOnboarding() {
   const { mutateAsync: handleStartBattle, isPending } = useStartBattle()
 
   return (
-    <SafeView
-      paddingHorizontal={isPlatform("android") ? 16 : 24}
-      backgroundColor="#292929"
-    >
-      <Header>
-        <TouchableOpacity onPress={() => router.push("/home/play")}>
-          <Typography fontWeight="700" color="#fff">
-            Voltar
-          </Typography>
-        </TouchableOpacity>
-        <Typography color="#fff">Batalha</Typography>
-      </Header>
+    <SafeView>
+      <PageHeader
+        title="Batalha 1v1"
+        onPressGoBack={() => router.push("/home/play")}
+        actionIcon={<Info />}
+        onPressAction={() => {}}
+      />
       <Content>
-        <Typography color="#fff" fontSize={24} marginBottom={24}>
+        <Swords size="48px" strokeWidth={1.5} />
+
+        <Typography fontSize={24} marginBottom={24} marginTop={24}>
           Escolha o seu oponente
         </Typography>
 
-        <TouchableOpacity
+        <Item
           onPress={async () => {
             setIsRandom(true)
             const response = await handleStartBattle({})
@@ -40,27 +37,18 @@ export default function BattleOnboarding() {
             router.push(`/game/battle/${response.battle.id}`)
           }}
         >
-          <Typography
-            fontWeight="700"
-            fontSize={16}
-            color="#fff"
-            textAlign="center"
-          >
+          <Shuffle color="#000" />
+          <Typography fontWeight="700" fontSize={16} textAlign="center">
             Jogador Aleatório
           </Typography>
-        </TouchableOpacity>
+        </Item>
 
-        <TouchableOpacity onPress={() => router.push("/game/battle/search")}>
-          <Typography
-            fontWeight="700"
-            fontSize={16}
-            color="#fff"
-            textAlign="center"
-            marginTop={24}
-          >
+        <Item onPress={() => router.push("/game/battle/search")}>
+          <UserSearch color="#000" />
+          <Typography fontWeight="700" fontSize={16} textAlign="center">
             Pesquisar Jogador
           </Typography>
-        </TouchableOpacity>
+        </Item>
       </Content>
 
       {isRandom && isPending && <LoadingScreen />}
@@ -77,4 +65,17 @@ const Header = styled.View`
 const Content = styled.View`
   align-items: center;
   padding-top: 48px;
+  padding-left: 16px;
+  padding-right: 16px;
+`
+
+const Item = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })`
+  border: 1px solid #d2d2d2;
+  padding: 16px;
+  width: 100%;
+  border-radius: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-direction: row;
+  gap: 16px;
 `

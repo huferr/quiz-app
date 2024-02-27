@@ -1,7 +1,5 @@
 import { Typography, SafeView, LoadingScreen } from "@/components"
 import { useGetProfile } from "@/hooks"
-import { supabase } from "@/api"
-import { Pressable } from "react-native"
 import { PageHeader } from "@/components/PageHeader"
 import styled from "styled-components/native"
 import { Settings } from "lucide-react-native"
@@ -21,16 +19,6 @@ export default function Profile() {
   const calcRate = (correctAnswers / (correctAnswers + wrongAnswers)) * 100
 
   const rate = Number.isNaN(calcRate) ? 0 : calcRate.toFixed(2)
-
-  const logout = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (!error) {
-      alert("Signed out!")
-    }
-    if (error) {
-      alert(error.message)
-    }
-  }
 
   const goToSettings = () => {
     router.push("/home/settings")
@@ -56,10 +44,6 @@ export default function Profile() {
         <Typography>Paid Coins: {paidCoins}</Typography>
         <Typography>Free Coins: {freeCoins}</Typography>
         <Typography>Points: {points}</Typography>
-
-        <Pressable onPress={logout}>
-          <Typography>Logout</Typography>
-        </Pressable>
       </Page>
     </SafeView>
   )

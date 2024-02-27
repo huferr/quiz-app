@@ -3,7 +3,7 @@ import { Text, TouchableOpacity } from "react-native"
 import { router } from "expo-router"
 import styled from "styled-components/native"
 
-import { SafeView, Typography, FullModal } from "@/components"
+import { SafeView, Typography, FullModal, PageHeader } from "@/components"
 import {
   useComputeUserAnswer,
   useGetProfile,
@@ -13,7 +13,7 @@ import {
 } from "@/hooks"
 import { useTimer } from "@/utils"
 
-import { isPlatform } from "@/utils"
+import { AlarmClock } from "lucide-react-native"
 
 export default function Marathon() {
   const { data, refetch, isLoading } = useGetSingleQuestion()
@@ -97,36 +97,31 @@ export default function Marathon() {
   }
 
   return (
-    <SafeView
-      paddingHorizontal={isPlatform("android") ? 16 : 24}
-      backgroundColor="#292929"
-    >
-      <Header>
-        <TouchableOpacity onPress={() => router.push("/home/play")}>
-          <Typography fontWeight="700" color="#fff">
-            Voltar
-          </Typography>
-        </TouchableOpacity>
+    <SafeView>
+      <PageHeader
+        centerElement={
+          <CenterTitle>
+            <AlarmClock size={28} />
+            <Typography fontWeight="700" fontSize={24} lineHeight={32}>
+              {isLoading ? 20 : clock}s
+            </Typography>
+          </CenterTitle>
+        }
+      />
 
-        {!isLoading && (
-          <Typography fontWeight="700" fontSize={24} color="#fff">
-            {clock}
-          </Typography>
-        )}
-
-        <Typography color="#fff">Maratona</Typography>
-      </Header>
-
-      <Content>
+      <QuestionContainer>
         <Typography
-          fontWeight="700"
+          fontWeight="600"
           fontSize={24}
-          color="#fff"
           textAlign="center"
+          marginBottom={72}
+          marginTop={72}
         >
           {question}
         </Typography>
+      </QuestionContainer>
 
+      <Content>
         <OptionsContainer>
           {options.map((option) => {
             const isSelectedCorrect = selectedOption === answer
@@ -141,7 +136,9 @@ export default function Marathon() {
                 disabled={!!selectedOption}
                 onPress={() => handleOnSelectOption(String(option))}
               >
-                <Typography fontWeight="700">{option}</Typography>
+                <Typography fontWeight="700" color="#FFF">
+                  {option}
+                </Typography>
               </OptionButton>
             )
           })}
@@ -151,7 +148,7 @@ export default function Marathon() {
 
       <FullModal visible={lose} animationType="slide">
         <LoseModalContainer>
-          <Typography color="#fff">Você perdeu!</Typography>
+          <Typography>Você perdeu!</Typography>
           <TouchableOpacity
             onPress={async () => {
               setSelectedOption("")
@@ -164,9 +161,7 @@ export default function Marathon() {
               })
             }}
           >
-            <Typography fontWeight="700" color="#fff">
-              Ver Anuncio
-            </Typography>
+            <Typography fontWeight="700">Ver Anuncio</Typography>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -183,9 +178,7 @@ export default function Marathon() {
               setLose(false)
             }}
           >
-            <Typography fontWeight="700" color="#fff">
-              200 coins
-            </Typography>
+            <Typography fontWeight="700">200 coins</Typography>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -194,9 +187,7 @@ export default function Marathon() {
               router.push("/game/marathon/onboarding")
             }}
           >
-            <Typography fontWeight="700" color="#fff">
-              Sair
-            </Typography>
+            <Typography fontWeight="700">Sair</Typography>
           </TouchableOpacity>
         </LoseModalContainer>
       </FullModal>
@@ -212,12 +203,12 @@ const Header = styled.View`
 
 const Content = styled.View`
   align-items: center;
-  padding-top: 48px;
+  padding-left: 16px;
+  padding-right: 16px;
 `
 
 const OptionsContainer = styled.View`
   width: 100%;
-  margin-top: 24px;
   gap: 24px;
 `
 
@@ -226,11 +217,11 @@ const OptionButton = styled.TouchableOpacity<{
   correctAnswer: boolean
   isSelectedOption: boolean
 }>`
-  padding: 6px 48px;
+  padding: 10px 48px;
   width: 100%;
   border-radius: 8px;
   background-color: ${(p) => {
-    if (!p.disabled) return "#fff"
+    if (!p.disabled) return "#2C72FA"
 
     if (p.correctAnswer || (p.isSelectedCorrect && p.isSelectedOption))
       return "#48B117"
@@ -247,4 +238,18 @@ const LoseModalContainer = styled.View`
   background-color: rgba(0, 0, 0, 0.8);
   padding-top: 40px;
   align-items: center;
+`
+
+const CenterTitle = styled.View`
+  width: 78px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const QuestionContainer = styled.View`
+  padding: 0px 24px;
+  border-bottom-width: 1px;
+  border-bottom-color: #d2d2d2;
+  margin: 0px 0px 24px;
 `

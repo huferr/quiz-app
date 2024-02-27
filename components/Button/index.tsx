@@ -24,9 +24,10 @@ const Container = styled.TouchableOpacity<Props>`
   margin-top: ${(props) => props.marginTop || 0}px;
   margin-left: ${(props) => props.marginLeft || 0}px;
   margin-right: ${(props) => props.marginRight || 0}px;
-  padding: 10px 16px;
+  padding: 12px 16px;
   background-color: ${(props) =>
     props.type === "primary" ? "#2c72fa" : "#060C18"};
   border-radius: 8px;
   align-items: center;
+  width: 100%;
 `

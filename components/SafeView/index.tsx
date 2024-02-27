@@ -2,6 +2,7 @@ import React from "react"
 import styled from "styled-components/native"
 import { isPlatform } from "@/utils"
 import { Typography } from "../Typography"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 interface Props {
   children: React.ReactNode
@@ -26,7 +27,7 @@ export function SafeView({ children, isLoading, ...props }: Props) {
   )
 }
 
-const SafeContainer = styled.SafeAreaView<Omit<Props, "children">>`
+const SafeContainer = styled(SafeAreaView)<Omit<Props, "children">>`
   padding-top: ${isPlatform("android") ? 50 : 0}px;
   flex: 1;
   background-color: ${({ backgroundColor }) => backgroundColor ?? "#fff"};
