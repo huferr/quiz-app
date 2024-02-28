@@ -13,7 +13,26 @@ import {
 } from "@/hooks"
 import { useTimer } from "@/utils"
 
-import { AlarmClock } from "lucide-react-native"
+import {
+  AlarmClock,
+  Banknote,
+  CircleDollarSign,
+  DraftingCompass,
+  Dumbbell,
+  FastForward,
+  Hourglass,
+  Scissors
+} from "lucide-react-native"
+
+const getIconByQuestionType = (type: "math" | "history" | "sports") => {
+  return (
+    {
+      math: <DraftingCompass />,
+      history: <Hourglass />,
+      sports: <Dumbbell />
+    }[type] || null
+  )
+}
 
 export default function Marathon() {
   const { data, refetch, isLoading } = useGetSingleQuestion()
@@ -34,7 +53,7 @@ export default function Marathon() {
     onFinish: () => {
       resetClock()
       pauseClock()
-      setLose(true)
+      // setLose(true)
     }
   })
 
@@ -44,11 +63,15 @@ export default function Marathon() {
 
   const userPaidCoins = userData?.paid_coins || 0
 
+  const userFreeCoins = userData?.free_coins || 0
+
   const options = data
     ? [data?.opt_one, data?.opt_two, data?.opt_three, data?.opt_four]
     : []
 
   const answer = data?.answer
+
+  const type = data?.type
 
   const handleUpdateStreak = async (add?: boolean) => {
     // In the moment of calling this function (When user select an option, and it is CORRECT),
@@ -85,7 +108,7 @@ export default function Marathon() {
 
     setTimeout(() => {
       setLose(true)
-    }, 100)
+    }, 500)
 
     await computeAnswer({ type: "wrong", value: 1 })
     await handleUpdateStreak()
@@ -98,30 +121,56 @@ export default function Marathon() {
 
   return (
     <SafeView>
-      <PageHeader
-        centerElement={
-          <CenterTitle>
-            <AlarmClock size={28} />
-            <Typography fontWeight="700" fontSize={24} lineHeight={32}>
-              {isLoading ? 20 : clock}s
-            </Typography>
-          </CenterTitle>
-        }
-      />
+      <HeaderContainer>
+        <ClockContainer>
+          <AlarmClock size={24} />
+          <Typography fontWeight="600" fontSize={18} lineHeight={32}>
+            {isLoading ? 20 : clock}s
+          </Typography>
+        </ClockContainer>
+        <StreakContainer>
+          <Typography fontWeight="600" fontSize={18} lineHeight={24}>
+            {streak}
+          </Typography>
+        </StreakContainer>
+        <TypeContainer>{getIconByQuestionType(data?.type)}</TypeContainer>
+      </HeaderContainer>
 
-      <QuestionContainer>
-        <Typography
-          fontWeight="600"
-          fontSize={24}
-          textAlign="center"
-          marginBottom={72}
-          marginTop={72}
-        >
-          {question}
-        </Typography>
-      </QuestionContainer>
+      <Subheader>
+        <CoinOuterContainer>
+        <CoinContainer color="#2C9D04">
+          <CircleDollarSign color="#2C9D04" size="20px" />
+          <Typography
+            fontWeight="600"
+            fontSize={16}
+            lineHeight={20}
+            color="#2C9D04"
+          >
+            {userFreeCoins}
+          </Typography>
+        </CoinContainer>
+        <CoinContainer color="#E807DF">
+          <Banknote color="#E807DF" size="20px" />
+          <Typography
+            fontWeight="600"
+            fontSize={16}
+            lineHeight={20}
+            color="#E807DF"
+          >
+            {userPaidCoins}
+          </Typography>
+        </CoinContainer>
+        </CoinOuterContainer>
+      
+      </Subheader>
 
       <Content>
+        <QuestionContainer>
+          <Typography fontWeight="600" fontSize={24} textAlign="center">
+            {question}
+          </Typography>
+        </QuestionContainer>
+
         <OptionsContainer>
           {options.map((option) => {
             const isSelectedCorrect = selectedOption === answer
@@ -143,7 +192,38 @@ export default function Marathon() {
             )
           })}
         </OptionsContainer>
-        <Text style={{ color: "#fff", paddingTop: 24 }}>Streak: {streak}</Text>
+
+        <PowersContainer>
+          <PowerItem color="#2C9D04">
+            <Scissors size="32px" color="#2C9D04" />
+            <CostContainer>
+              <CircleDollarSign color="#2C9D04" size="20px" />
+              <Typography
+                fontWeight="600"
+                fontSize={16}
+                lineHeight={20}
+                color="#2C9D04"
+              >
+                200
+              </Typography>
+            </CostContainer>
+          </PowerItem>
+          <PowerItem color="#E807DF">
+            <FastForward size="32px" color="#E807DF" />
+
+            <CostContainer>
+              <Banknote color="#E807DF" size="20px" />
+              <Typography
+                fontWeight="600"
+                fontSize={16}
+                lineHeight={20}
+                color="#E807DF"
+              >
+                20
+              </Typography>
+            </CostContainer>
+          </PowerItem>
+        </PowersContainer>
       </Content>
 
       <FullModal visible={lose} animationType="slide">
@@ -195,10 +275,12 @@ export default function Marathon() {
   )
 }
 
-const Header = styled.View`
+const Subheader = styled.View`
   width: 100%;
   flex-direction: row;
-  justify-content: space-between;
+  padding: 24px 16px;
+  gap: 24px;
+  justify-content: center;
 `
 
 const Content = styled.View`
@@ -209,7 +291,7 @@ const Content = styled.View`
 
 const OptionsContainer = styled.View`
   width: 100%;
-  gap: 24px;
+  gap: 16px;
 `
 
 const OptionButton = styled.TouchableOpacity<{
@@ -228,7 +310,7 @@ const OptionButton = styled.TouchableOpacity<{
 
     if (!p.isSelectedCorrect && p.isSelectedOption) return "#c53030"
 
-    return "#fff"
+    return "#2C72FA50"
   }};
   align-items: center;
 `
@@ -240,16 +322,113 @@ const LoseModalContainer = styled.View`
   align-items: center;
 `
 
-const CenterTitle = styled.View`
-  width: 78px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+const QuestionCardEffectSmaller = styled.View`
+  width: 90%;
+  top: -16px;
+  height: 8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-width: 0px;
+  border: 2px solid #d2d2d2;
+  border-top-width: 4px;
+
+  z-index: 1;
+`
+
+const QuestionCardEffect = styled.View`
+  width: 100%;
+  top: -10px;
+  height: 8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border: 2px solid #d2d2d2;
+  border-bottom-width: 0px;
+  border-top-width: 4px;
+  z-index: 2;
 `
 
 const QuestionContainer = styled.View`
-  padding: 0px 24px;
+  padding: 0px 16px;
+  width: 100%;
+  margin-bottom: 48px;
+  border-width: 2px;
+  border-color: #d2d2d2;
+  height: 190px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+`
+
+const HeaderContainer = styled.View`
+  padding: 16px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   border-bottom-width: 1px;
   border-bottom-color: #d2d2d2;
-  margin: 0px 0px 24px;
+`
+
+const ClockContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 80px;
+  position: absolute;
+  left: 16px;
+`
+
+const StreakContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+`
+
+const CoinOuterContainer = styled.View`
+  flex-direction: row;
+  gap: 24px;
+  border: 1px solid #d2d2d2;
+  border-radius: 24px;
+  padding: 8px 12px;
+`
+
+const CoinContainer = styled.View<{ color: string }>`
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+`
+
+const TypeContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  right: 16px;
+`
+
+const PowersContainer = styled.View`
+  flex-direction: row;
+  margin-top: 48px;
+  gap: 24px;
+`
+
+const PowerItem = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })<{
+  color: string
+}>`
+  padding: 16px 24px;
+  border-radius: 8px;
+  background-color: ${(p) => p.color + '20'};
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  border: 1px solid ${(p) => p.color + '40'};
+  gap: 8px;
+  width: 140px;
+`
+
+const CostContainer = styled.View`
+  flex-direction: row;
+  gap: 4px;
 `

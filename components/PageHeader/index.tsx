@@ -25,7 +25,7 @@ export function PageHeader({ ...props }: Props) {
         {props.centerElement ? (
           props.centerElement
         ) : (
-          <Typography fontWeight="600">{props.title}</Typography>
+          <Typography fontWeight="600" fontSize={20}>{props.title}</Typography>
         )}
       </TitleContainer>
 
