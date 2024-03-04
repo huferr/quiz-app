@@ -31,7 +31,7 @@ export function useInterval(
   }, [delay, stop])
 }
 
-export function useTimer(time: number, options?: { onFinish?: () => void }) {
+export function useTimer(time: number, options?: { onFinish?: () => void, enabled?: boolean }) {
   const [clock, setClock] = useState(time || 60)
   const [stop, setStop] = useState(false)
 
@@ -40,7 +40,7 @@ export function useTimer(time: number, options?: { onFinish?: () => void }) {
       setClock((secounds) => (secounds > 0 ? secounds - 1 : 0))
     },
     1000,
-    stop
+    (!options?.enabled && options?.enabled !== undefined) || stop
   )
 
   useEffect(() => {

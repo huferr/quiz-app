@@ -1,13 +1,14 @@
 import { useState } from "react"
-import { Text, TouchableOpacity } from "react-native"
+import { TouchableOpacity } from "react-native"
 import { router } from "expo-router"
 import styled from "styled-components/native"
 
-import { SafeView, Typography, FullModal, PageHeader } from "@/components"
+import { SafeView, Typography, FullModal, LoadingScreen } from "@/components"
 import {
   useComputeUserAnswer,
   useGetProfile,
   useGetSingleQuestion,
+  useUpdateFreeCoins,
   useUpdatePaidCoins,
   useUpdateStreak
 } from "@/hooks"
@@ -21,10 +22,13 @@ import {
   Dumbbell,
   FastForward,
   Hourglass,
-  Scissors
+  Scissors,
+  Ear,
+  Earth
 } from "lucide-react-native"
 
 const getIconByQuestionType = (type: "math" | "history" | "sports") => {
+  if (true) return <Earth />
   return (
     {
       math: <DraftingCompass />,
@@ -40,10 +44,12 @@ export default function Marathon() {
   const { mutateAsync: computeAnswer } = useComputeUserAnswer()
   const { mutateAsync: updateStreak } = useUpdateStreak()
   const { mutateAsync: updatePaidCoins } = useUpdatePaidCoins()
+  const { mutateAsync: updateFreeCoins } = useUpdateFreeCoins()
 
   const [selectedOption, setSelectedOption] = useState("")
   const [streak, setStreak] = useState(0)
   const [lose, setLose] = useState(false)
+  const [useCutPower, setUseCutPower] = useState(false)
 
   const {
     clock,
@@ -53,25 +59,23 @@ export default function Marathon() {
     onFinish: () => {
       resetClock()
       pauseClock()
-      // setLose(true)
-    }
+      setLose(true)
+    },
+    enabled: !isLoading
   })
 
-  const question = data?.title
-
   const userCurrentStreak = userData?.streak || 0
-
   const userPaidCoins = userData?.paid_coins || 0
-
   const userFreeCoins = userData?.free_coins || 0
 
-  const options = data
-    ? [data?.opt_one, data?.opt_two, data?.opt_three, data?.opt_four]
-    : []
-
+  const question = data?.title
   const answer = data?.answer
 
-  const type = data?.type
+  const options = (() => {
+    if (!data) return []
+
+    return [data.opt_one, data.opt_two, data.opt_three, data.opt_four]
+  })()
 
   const handleUpdateStreak = async (add?: boolean) => {
     // In the moment of calling this function (When user select an option, and it is CORRECT),
@@ -84,7 +88,9 @@ export default function Marathon() {
   }
 
   const handleOnSelectOption = async (opt: string) => {
+    setUseCutPower(false)
     setSelectedOption(opt)
+    pauseClock()
 
     const correctOption = opt === answer
 
@@ -119,49 +125,56 @@ export default function Marathon() {
     console.log("view ads")
   }
 
+  if (isLoading) return <LoadingScreen />
+
   return (
     <SafeView>
       <HeaderContainer>
         <ClockContainer>
-          <AlarmClock size={24} />
+          <StreakContainer>
+            <AlarmClock />
+          </StreakContainer>
           <Typography fontWeight="600" fontSize={18} lineHeight={32}>
             {isLoading ? 20 : clock}s
           </Typography>
         </ClockContainer>
         <StreakContainer>
-          <Typography fontWeight="600" fontSize={18} lineHeight={24}>
-            {streak}
-          </Typography>
+          <StreakContainer>
+            <Typography fontWeight="600" fontSize={18} lineHeight={24}>
+              {streak}
+            </Typography>
+          </StreakContainer>
         </StreakContainer>
-        <TypeContainer>{getIconByQuestionType(data?.type)}</TypeContainer>
+        <TypeContainer>
+          {getIconByQuestionType(data?.type as any)}
+        </TypeContainer>
       </HeaderContainer>
 
       <Subheader>
         <CoinOuterContainer>
-        <CoinContainer color="#2C9D04">
-          <CircleDollarSign color="#2C9D04" size="20px" />
-          <Typography
-            fontWeight="600"
-            fontSize={16}
-            lineHeight={20}
-            color="#2C9D04"
-          >
-            {userFreeCoins}
-          </Typography>
-        </CoinContainer>
-        <CoinContainer color="#E807DF">
-          <Banknote color="#E807DF" size="20px" />
-          <Typography
-            fontWeight="600"
-            fontSize={16}
-            lineHeight={20}
-            color="#E807DF"
-          >
-            {userPaidCoins}
-          </Typography>
-        </CoinContainer>
+          <CoinContainer color="#2C9D04">
+            <CircleDollarSign color="#2C9D04" size="20px" />
+            <Typography
+              fontWeight="600"
+              fontSize={16}
+              lineHeight={20}
+              color="#2C9D04"
+            >
+              {userFreeCoins}
+            </Typography>
+          </CoinContainer>
+          <CoinContainer color="#E807DF">
+            <Banknote color="#E807DF" size="20px" />
+            <Typography
+              fontWeight="600"
+              fontSize={16}
+              lineHeight={20}
+              color="#E807DF"
+            >
+              {userPaidCoins}
+            </Typography>
+          </CoinContainer>
         </CoinOuterContainer>
-      
       </Subheader>
 
       <Content>
@@ -172,8 +185,16 @@ export default function Marathon() {
         </QuestionContainer>
 
         <OptionsContainer>
-          {options.map((option) => {
+          {options.map((option, idx, arr) => {
             const isSelectedCorrect = selectedOption === answer
+
+            const onlyIncorrectOptions = arr
+              .filter((opt) => opt !== answer)
+              .slice(0, 2)
+
+            const disabled =
+              !!selectedOption ||
+              (useCutPower && onlyIncorrectOptions.includes(option))
 
             return (
               <OptionButton
@@ -183,7 +204,14 @@ export default function Marathon() {
                 isSelectedCorrect={isSelectedCorrect}
                 isSelectedOption={selectedOption === option}
                 disabled={!!selectedOption}
-                onPress={() => handleOnSelectOption(String(option))}
+                forceDisabled={
+                  useCutPower && onlyIncorrectOptions.includes(option)
+                }
+                onPress={() => {
+                  if (disabled) return
+
+                  handleOnSelectOption(String(option))
+                }}
               >
                 <Typography fontWeight="700" color="#FFF">
                   {option}
@@ -194,7 +222,15 @@ export default function Marathon() {
         </OptionsContainer>
 
         <PowersContainer>
-          <PowerItem color="#2C9D04">
+          <PowerItem
+            color="#2C9D04"
+            onPress={async () => {
+              if (userFreeCoins < 200) return
+
+              setUseCutPower(true)
+              await updateFreeCoins({ type: "remove", value: 200 })
+            }}
+          >
             <Scissors size="32px" color="#2C9D04" />
             <CostContainer>
               <CircleDollarSign color="#2C9D04" size="20px" />
@@ -208,7 +244,18 @@ export default function Marathon() {
               </Typography>
             </CostContainer>
           </PowerItem>
-          <PowerItem color="#E807DF">
+          <PowerItem
+            color="#E807DF"
+            onPress={async () => {
+              if (userPaidCoins < 20) return
+
+              await updatePaidCoins({ type: "remove", value: 20 })
+
+              await refetch().then(() => {
+                resetClock()
+              })
+            }}
+          >
             <FastForward size="32px" color="#E807DF" />
 
             <CostContainer>
@@ -278,8 +325,8 @@ export default function Marathon() {
 const Subheader = styled.View`
   width: 100%;
   flex-direction: row;
-  padding: 24px 16px;
   gap: 24px;
+  padding-bottom: 16px;
   justify-content: center;
 `
 
@@ -298,11 +345,14 @@ const OptionButton = styled.TouchableOpacity<{
   isSelectedCorrect: boolean | undefined
   correctAnswer: boolean
   isSelectedOption: boolean
+  forceDisabled?: boolean
 }>`
-  padding: 10px 48px;
+  padding: 8px 48px;
   width: 100%;
   border-radius: 8px;
   background-color: ${(p) => {
+    if (p.forceDisabled) return "#2C72FA50"
+
     if (!p.disabled) return "#2C72FA"
 
     if (p.correctAnswer || (p.isSelectedCorrect && p.isSelectedOption))
@@ -322,36 +372,11 @@ const LoseModalContainer = styled.View`
   align-items: center;
 `
 
-const QuestionCardEffectSmaller = styled.View`
-  width: 90%;
-  top: -16px;
-  height: 8px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-bottom-width: 0px;
-  border: 2px solid #d2d2d2;
-  border-top-width: 4px;
-
-  z-index: 1;
-`
-
-const QuestionCardEffect = styled.View`
-  width: 100%;
-  top: -10px;
-  height: 8px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border: 2px solid #d2d2d2;
-  border-bottom-width: 0px;
-  border-top-width: 4px;
-  z-index: 2;
-`
-
 const QuestionContainer = styled.View`
   padding: 0px 16px;
   width: 100%;
-  margin-bottom: 48px;
-  border-width: 2px;
+  margin-bottom: 24px;
+  border-width: 1px;
   border-color: #d2d2d2;
   height: 190px;
   border-radius: 8px;
@@ -361,7 +386,7 @@ const QuestionContainer = styled.View`
 `
 
 const HeaderContainer = styled.View`
-  padding: 16px;
+  padding: 12px 16px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -382,14 +407,21 @@ const ClockContainer = styled.View`
 const StreakContainer = styled.View`
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  padding: 2px 4px;
+  border-radius: 6px;
+  height: 32px;
+  background-color: #f0f0f0;
 `
 
 const CoinOuterContainer = styled.View`
   flex-direction: row;
   gap: 24px;
   border: 1px solid #d2d2d2;
-  border-radius: 24px;
+  border-top-width: 0px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
   padding: 8px 12px;
 `
 
@@ -406,11 +438,17 @@ const TypeContainer = styled.View`
   gap: 8px;
   position: absolute;
   right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
 `
 
 const PowersContainer = styled.View`
   flex-direction: row;
-  margin-top: 48px;
+  margin-top: 24px;
   gap: 24px;
 `
 
@@ -419,11 +457,11 @@ const PowerItem = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })<{
 }>`
   padding: 16px 24px;
   border-radius: 8px;
-  background-color: ${(p) => p.color + '20'};
+  background-color: ${(p) => p.color + "20"};
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  border: 1px solid ${(p) => p.color + '40'};
+  border: 1px solid ${(p) => p.color + "40"};
   gap: 8px;
   width: 140px;
 `

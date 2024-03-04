@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { api } from "@/api"
 import { Battle, Question, User } from "@/types"
@@ -115,6 +115,8 @@ export const useUpdateStreak = () => {
 
 export const useUpdateFreeCoins = () => {
   const { userId } = useAuth()
+  const queryClient = useQueryClient()
+
 
   const fetcher = async ({
     value,
@@ -138,12 +140,16 @@ export const useUpdateFreeCoins = () => {
 
   return useMutation({
     mutationKey: ["useUpdateFreeCoins", userId],
-    mutationFn: fetcher
+    mutationFn: fetcher,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["useGetProfile", userId]})
+    }
   })
 }
 
 export const useUpdatePaidCoins = () => {
   const { userId } = useAuth()
+  const queryClient = useQueryClient()
 
   const fetcher = async ({
     value,
@@ -167,7 +173,10 @@ export const useUpdatePaidCoins = () => {
 
   return useMutation({
     mutationKey: ["useUpdateFreeCoins", userId],
-    mutationFn: fetcher
+    mutationFn: fetcher,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["useGetProfile", userId]})
+    }
   })
 }
 
