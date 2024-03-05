@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { MedalIcon, ShoppingCartIcon } from "lucide-react-native";
 import { HomeIcon, PlayIcon, User } from "lucide-react-native";
 import { HOME_ROUTES } from "@/constants";
@@ -9,10 +9,19 @@ import styled from "styled-components/native";
 
 export function TabNavigator(props: BottomTabBarProps) {
   const { bottom } = useSafeAreaInsets();
+  const pathname = usePathname()
 
   const homeRoutes = props.state.routes.filter((route) =>
     HOME_ROUTES.some((homeRoute) => homeRoute.includes(route.name))
-  );
+  )
+
+  const homeRoute = homeRoutes.find((route) => route.name === "index")!;
+  const playRoute = homeRoutes.find((route) => route.name === "play")!;
+  const storeRoute = homeRoutes.find((route) => route.name === "store")!;
+  const rankingRoute = homeRoutes.find((route) => route.name === "ranking")!;
+  const profileRoute = homeRoutes.find((route) => route.name === "profile")!;
+
+  const routes = [homeRoute, rankingRoute, playRoute, storeRoute, profileRoute];
 
   const icons: { [x: string]: (color: string) => React.JSX.Element } = {
     index: (color) => <HomeIcon color={color || "#000"} />,
@@ -27,15 +36,15 @@ export function TabNavigator(props: BottomTabBarProps) {
     router.push("/home/" + routeName);
   };
 
-  const currentRoute = props.navigation.getState().index;
-
   return (
     <Container bottom={bottom}>
-      {homeRoutes.map((route, index) => {
+      {routes.map((route) => {
+
+        const path = route.name === "index" ? "/home" : "/home/" + route.name;
         return (
           <IconButton key={route.key} onPress={() => handleClick(route)}>
             {icons?.[route?.name]?.(
-              currentRoute === index ? "#2A74E4" : "#000"
+              pathname === path ? "#2A74E4" : "#000"
             )}
           </IconButton>
         );

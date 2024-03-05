@@ -9,13 +9,14 @@ export default function Play() {
     <SafeView>
       <PageHeader title="Modo de Jogo" />
       <Page>
-        <Item onPress={() => router.push("/game/battle/onboarding")}>
-          <Typography fontWeight="700">Batalha 1v1</Typography>
-        </Item>
 
         <Item onPress={() => router.push("/game/marathon/onboarding")}>
           <Typography fontWeight="700">Maratona</Typography>
         </Item>
+        <Item onPress={() => router.push("/game/battle/onboarding")}>
+          <Typography fontWeight="700">Batalha 1v1</Typography>
+        </Item>
+
       </Page>
     </SafeView>
   )

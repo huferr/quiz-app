@@ -18,22 +18,31 @@ import {
   AlarmClock,
   Banknote,
   CircleDollarSign,
-  DraftingCompass,
   Dumbbell,
   FastForward,
-  Hourglass,
   Scissors,
-  Ear,
-  Earth
+  Earth,
+  LibraryBig,
+  FlaskConical
 } from "lucide-react-native"
 
+const getTypeColor = (type: "math" | "history" | "sports") => {
+  return ({
+    math: "#1C8B00",
+    history: "#B90505",
+    sports: "#E807DF",
+    geo: "#0067E0"
+  }[type] || "#000")
+}
+
 const getIconByQuestionType = (type: "math" | "history" | "sports") => {
-  if (true) return <Earth />
+
   return (
     {
-      math: <DraftingCompass />,
-      history: <Hourglass />,
-      sports: <Dumbbell />
+      math: <FlaskConical color="#fff" />,
+      history: <LibraryBig color="#fff" />,
+      sports: <Dumbbell color="#fff" />,
+      geo: <Earth color="#fff" />,
     }[type] || null
   )
 }
@@ -59,7 +68,7 @@ export default function Marathon() {
     onFinish: () => {
       resetClock()
       pauseClock()
-      setLose(true)
+      // setLose(true)
     },
     enabled: !isLoading
   })
@@ -139,13 +148,11 @@ export default function Marathon() {
           </Typography>
         </ClockContainer>
         <StreakContainer>
-          <StreakContainer>
-            <Typography fontWeight="600" fontSize={18} lineHeight={24}>
-              {streak}
-            </Typography>
-          </StreakContainer>
+          <Typography fontWeight="600" fontSize={18} lineHeight={24}>
+            {streak}
+          </Typography>
         </StreakContainer>
-        <TypeContainer>
+        <TypeContainer color={getTypeColor(data?.type as any)}>
           {getIconByQuestionType(data?.type as any)}
         </TypeContainer>
       </HeaderContainer>
@@ -275,7 +282,7 @@ export default function Marathon() {
 
       <FullModal visible={lose} animationType="slide">
         <LoseModalContainer>
-          <Typography>Você perdeu!</Typography>
+          <Typography color="#fff" fontSize={24}>Você errou!</Typography>
           <TouchableOpacity
             onPress={async () => {
               setSelectedOption("")
@@ -288,16 +295,16 @@ export default function Marathon() {
               })
             }}
           >
-            <Typography fontWeight="700">Ver Anuncio</Typography>
+            <Typography fontWeight="700" color="#fff">Ver Anuncio</Typography>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={async () => {
               setSelectedOption("")
 
-              if (userPaidCoins < 200) return
+              if (userPaidCoins <= 100) return
 
-              await updatePaidCoins({ type: "remove", value: 200 })
+              await updatePaidCoins({ type: "remove", value: 100 })
 
               await refetch().then(() => {
                 resetClock()
@@ -305,7 +312,7 @@ export default function Marathon() {
               setLose(false)
             }}
           >
-            <Typography fontWeight="700">200 coins</Typography>
+            <Typography fontWeight="700" color="#fff">100 paid coins</Typography>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -314,7 +321,7 @@ export default function Marathon() {
               router.push("/game/marathon/onboarding")
             }}
           >
-            <Typography fontWeight="700">Sair</Typography>
+            <Typography fontWeight="700" color="#fff">Sair</Typography>
           </TouchableOpacity>
         </LoseModalContainer>
       </FullModal>
@@ -412,6 +419,7 @@ const StreakContainer = styled.View`
   padding: 2px 4px;
   border-radius: 6px;
   height: 32px;
+  min-width: 32px;
   background-color: #f0f0f0;
 `
 
@@ -420,8 +428,8 @@ const CoinOuterContainer = styled.View`
   gap: 24px;
   border: 1px solid #d2d2d2;
   border-top-width: 0px;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
   padding: 8px 12px;
 `
 
@@ -432,7 +440,7 @@ const CoinContainer = styled.View<{ color: string }>`
   justify-content: center;
 `
 
-const TypeContainer = styled.View`
+const TypeContainer = styled.View<{ color: string }>`
   flex-direction: row;
   align-items: center;
   gap: 8px;
@@ -443,7 +451,7 @@ const TypeContainer = styled.View`
   border-radius: 6px;
   align-items: center;
   justify-content: center;
-  background-color: #f0f0f0;
+  background-color: ${p => p.color || "#000"};
 `
 
 const PowersContainer = styled.View`
@@ -452,7 +460,7 @@ const PowersContainer = styled.View`
   gap: 24px;
 `
 
-const PowerItem = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 })<{
+const PowerItem = styled.TouchableOpacity.attrs({ activeOpacity: 0.7 }) <{
   color: string
 }>`
   padding: 16px 24px;
