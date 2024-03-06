@@ -39,10 +39,10 @@ const getIconByQuestionType = (type: "math" | "history" | "sports") => {
 
   return (
     {
-      math: <FlaskConical color="#fff" />,
-      history: <LibraryBig color="#fff" />,
-      sports: <Dumbbell color="#fff" />,
-      geo: <Earth color="#fff" />,
+      math: <FlaskConical color="#F0F4F8" />,
+      history: <LibraryBig color="#F0F4F8" />,
+      sports: <Dumbbell color="#F0F4F8" />,
+      geo: <Earth color="#F0F4F8" />,
     }[type] || null
   )
 }
@@ -420,7 +420,6 @@ const StreakContainer = styled.View`
   border-radius: 6px;
   height: 32px;
   min-width: 32px;
-  background-color: #f0f0f0;
 `
 
 const CoinOuterContainer = styled.View`

@@ -41,7 +41,6 @@ export default function Page() {
 
   return (
     <SafeView>
-      <PageHeader title="Visão Geral" />
       <Container
         refreshControl={
           <RefreshControl onRefresh={handleOnRefresh} refreshing={refreshing} />
@@ -113,4 +112,7 @@ export default function Page() {
 
 const Container = styled.ScrollView`
   padding: 16px 16px 0px;
+`
+const RankingContainer = styled.View`
+  padding: 0px 16px;
 `

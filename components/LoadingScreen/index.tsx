@@ -45,7 +45,7 @@ const SpinnerContainer = styled(Animated.View)`
 
 const Container = styled.View`
   flex: 1;
-  background-color: #fff;
+  background-color: #F0F4F8;
   justify-content: center;
   align-items: center;
 `
