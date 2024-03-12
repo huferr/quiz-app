@@ -13,7 +13,7 @@ export default function MarathonOnboarding() {
   const streak = data?.streak || 0
 
   const onPressGoBack = () => {
-    router.push("/home/play")
+    router.push("/home")
   }
 
   return (

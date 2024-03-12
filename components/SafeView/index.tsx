@@ -28,7 +28,7 @@ export function SafeView({ children, isLoading, ...props }: Props) {
 }
 
 const SafeContainer = styled(SafeAreaView)<Omit<Props, "children">>`
-  padding-top: ${isPlatform("android") ? 50 : 0}px;
+  padding-top: ${isPlatform("android") ? 24 : 0}px;
   flex: 1;
   background-color: ${({ backgroundColor }) => backgroundColor ?? "#F0F4F8"};
 `

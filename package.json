@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint:fix": "prettier --write './**/*.ts' && eslint --fix"
+    "lint:fix": "prettier --write './**/*.ts' && eslint --fix",
+    "generate-types": "npx supabase gen types typescript --project-id jnlfiaithtwymoiibqis > types/api.ts && npm run lint:fix"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.2",

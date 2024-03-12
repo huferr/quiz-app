@@ -92,7 +92,7 @@ export default function Marathon() {
     // so we need to add 1 to the streak
     const addOne = add ? 1 : 0
     if (userCurrentStreak < streak + addOne) {
-      await updateStreak(streak + addOne)
+      await updateStreak({ newStreak: streak + addOne})
     }
   }
 

@@ -12,13 +12,15 @@ export default function BattleOnboarding() {
 
   const { mutateAsync: handleStartBattle, isPending } = useStartBattle()
 
+  if (isRandom && isPending && <LoadingScreen />) return <LoadingScreen />
+
   return (
     <SafeView>
       <PageHeader
         title="Batalha 1v1"
-        onPressGoBack={() => router.push("/home/play")}
+        onPressGoBack={() => router.push("/home")}
         actionIcon={<Info />}
-        onPressAction={() => {}}
+        onPressAction={() => { }}
       />
       <Content>
         <Swords size="48px" strokeWidth={1.5} />
@@ -30,7 +32,7 @@ export default function BattleOnboarding() {
         <Item
           onPress={async () => {
             setIsRandom(true)
-            const response = await handleStartBattle({})
+            const response = await handleStartBattle({ opponentId: "" })
 
             console.log("response", response)
 
@@ -50,8 +52,6 @@ export default function BattleOnboarding() {
           </Typography>
         </Item>
       </Content>
-
-      {isRandom && isPending && <LoadingScreen />}
     </SafeView>
   )
 }

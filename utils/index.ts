@@ -31,7 +31,10 @@ export function useInterval(
   }, [delay, stop])
 }
 
-export function useTimer(time: number, options?: { onFinish?: () => void, enabled?: boolean }) {
+export function useTimer(
+  time: number,
+  options?: { onFinish?: () => void; enabled?: boolean }
+) {
   const [clock, setClock] = useState(time || 60)
   const [stop, setStop] = useState(false)
 
@@ -57,4 +60,25 @@ export function useTimer(time: number, options?: { onFinish?: () => void, enable
   const pause = () => setStop(true)
 
   return { clock, resetClock, pause }
+}
+
+export const getCorrectAnswersRate = (
+  correctAnswers?: number,
+  wrongAnswers?: number
+) => {
+  if (!correctAnswers || !wrongAnswers) {
+    return 0
+  }
+
+  const calcRate = (correctAnswers / (correctAnswers + wrongAnswers)) * 100
+
+  const rate = Number.isNaN(calcRate) ? 0 : calcRate.toFixed(1)
+
+  return rate
+}
+
+export const xpToLevel = (xp: number) => {
+  const constant = 1
+
+  return constant * Math.sqrt(xp)
 }
