@@ -74,7 +74,7 @@ export default function QuestionScreen() {
         await refetchBattle()
       })
 
-      await computeAnswer({ type: "correct", value: 1 })
+      await computeAnswer({ type: "correct", value: 1, questionType: question?.type  })
 
       return
     }

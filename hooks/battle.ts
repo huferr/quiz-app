@@ -15,7 +15,6 @@ export const useStartBattle = () => {
     let opponent = {} as {
       id: string
       username: string | null
-      level: number
     }
 
     // if opponentId is provided, use that opponent, otherwise find a random opponent
@@ -23,7 +22,7 @@ export const useStartBattle = () => {
       const { data: specificOpponent, error: specificOpponentError } =
         await supabase
           .from("profiles")
-          .select("id, username, level")
+          .select("id, username, correct_answers")
           .eq("id", opponentId)
           .single()
 
@@ -39,7 +38,7 @@ export const useStartBattle = () => {
       // find only a random opponent that has been active in the last week
       const { data: randomOpponent, error: opponentError } = await supabase
         .from("profiles")
-        .select("id, username, level")
+        .select("id, username")
         .neq("id", userId)
         .gte(
           "updated_at",
@@ -98,8 +97,8 @@ export const useUpdateBattle = () => {
     battleId: number
     changeOwner: boolean
     value: number
-    finished: boolean
-    winnerId: string
+    finished?: boolean
+    winnerId?: string
   }) => {
     if (!battleId) throw { message: "Missing battleId" }
     if (!userId) throw { message: "Missing userId" }
@@ -210,7 +209,7 @@ export const useGetBattle = (battleId: number) => {
 
     const { data: opponent } = await supabase
       .from("profiles")
-      .select("username, level, id")
+      .select("username, correct_answers, id")
       .eq("id", isOpponent! ? battle.user_id! : battle.opponent_id!)
       .single()
 
@@ -253,7 +252,7 @@ export const useSearchBattlePlayers = (query: string) => {
 
     const { data: players, error: playersError } = await supabase
       .from("profiles")
-      .select("id, username, level")
+      .select("id, username, correct_answers")
       .ilike("username", `%${query}%`)
       .neq("id", userId)
 

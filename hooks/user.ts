@@ -37,7 +37,7 @@ export const useGetProfile = () => {
 
 export const useGetUserBasicInfo = (userId: string) => {
   const fetcher = async () => {
-    if (!userId) return { message: "Missing userId" }
+    if (!userId) throw { message: "Missing userId" }
 
     const { data, error } = await supabase
       .from("profiles")

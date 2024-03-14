@@ -105,7 +105,7 @@ export default function Marathon() {
 
     if (correctOption) {
       setStreak((prev) => prev + 1)
-      await computeAnswer({ type: "correct", value: 1 })
+      await computeAnswer({ type: "correct", value: 1, questionType: data?.type })
 
       setTimeout(() => {
         refetch().then(() => {

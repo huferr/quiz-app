@@ -78,7 +78,7 @@ export const getCorrectAnswersRate = (
 }
 
 export const xpToLevel = (xp: number) => {
-  const constant = 1
+  const constant = 0.5
 
   return constant * Math.sqrt(xp)
 }

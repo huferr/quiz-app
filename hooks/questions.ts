@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useAuth } from "./user"
 import { supabase } from "@/api"
+import { Database } from "@/types/api"
 
 export const useUpdateStreak = () => {
   const { userId } = useAuth()
@@ -29,12 +30,17 @@ export const useComputeUserAnswer = () => {
 
   const fetcher = async ({
     value,
-    type
+    type,
+    questionType
   }: {
     value: number
     type: "wrong" | "correct"
+    questionType?: string | null
   }) => {
-    if (!userId) return { message: "Missing userId" }
+    if (!userId) throw { message: "Missing userId" }
+
+    if (type === "correct" && !questionType)
+      throw { message: "Missing questionType" }
 
     // If type === wrong
     if (type === "wrong") {
@@ -50,8 +56,11 @@ export const useComputeUserAnswer = () => {
       }
     }
 
+    const functionName =
+      `update_${questionType}_correct_answers` as keyof Database["public"]["Functions"]
+
     // If type === correct
-    const { error } = await supabase.rpc("update_correct_answer_amount", {
+    const { error } = await supabase.rpc(functionName, {
       user_id: userId,
       new_value: value
     })

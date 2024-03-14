@@ -10,8 +10,8 @@ import {
   Banknote,
   Brain,
   CircleDollarSign,
+  Layers,
   Medal,
-  Rocket,
   Search,
   SearchCheck,
   Swords
@@ -146,7 +146,7 @@ export default function Page() {
           onPress={goToMarathon}
         >
           <GameCardHeader>
-            <Rocket color="#119F28" />
+            <Layers color="#119F28" />
             <Typography fontWeight="700">Maratona</Typography>
           </GameCardHeader>
 

@@ -69,11 +69,13 @@ export type Database = {
           email: string | null
           first_name: string | null
           free_coins: number
+          geo_correct_answers: number | null
+          history_correct_answers: number | null
           id: string
           last_name: string | null
-          level: number
+          math_correct_answers: number | null
           paid_coins: number
-          points: number
+          science_correct_answers: number | null
           streak: number
           updated_at: string | null
           username: string | null
@@ -83,19 +85,21 @@ export type Database = {
           badges?: string[] | null
           battles_lost?: number | null
           battles_won?: number | null
-          correct_answers: number
+          correct_answers?: number
           email?: string | null
           first_name?: string | null
           free_coins?: number
+          geo_correct_answers?: number | null
+          history_correct_answers?: number | null
           id: string
           last_name?: string | null
-          level?: number
+          math_correct_answers?: number | null
           paid_coins?: number
-          points?: number
+          science_correct_answers?: number | null
           streak?: number
           updated_at?: string | null
           username?: string | null
-          wrong_answers: number
+          wrong_answers?: number
         }
         Update: {
           badges?: string[] | null
@@ -105,11 +109,13 @@ export type Database = {
           email?: string | null
           first_name?: string | null
           free_coins?: number
+          geo_correct_answers?: number | null
+          history_correct_answers?: number | null
           id?: string
           last_name?: string | null
-          level?: number
+          math_correct_answers?: number | null
           paid_coins?: number
-          points?: number
+          science_correct_answers?: number | null
           streak?: number
           updated_at?: string | null
           username?: string | null
@@ -175,8 +181,6 @@ export type Database = {
           first_name: string | null
           id: string | null
           last_name: string | null
-          level: number | null
-          points: number | null
           rank: number | null
           streak: number | null
           username: string | null
@@ -251,11 +255,39 @@ export type Database = {
         }
         Returns: undefined
       }
+      update_entertainment_correct_answers: {
+        Args: {
+          user_id: string
+          new_value: number
+        }
+        Returns: undefined
+      }
       update_free_coins: {
         Args: {
           user_id: string
           value: number
           type: string
+        }
+        Returns: undefined
+      }
+      update_geo_correct_answers: {
+        Args: {
+          user_id: string
+          new_value: number
+        }
+        Returns: undefined
+      }
+      update_history_correct_answers: {
+        Args: {
+          user_id: string
+          new_value: number
+        }
+        Returns: undefined
+      }
+      update_math_correct_answers: {
+        Args: {
+          user_id: string
+          new_value: number
         }
         Returns: undefined
       }
@@ -272,6 +304,13 @@ export type Database = {
           user_id: string
           value: number
           type: string
+        }
+        Returns: undefined
+      }
+      update_science_correct_answers: {
+        Args: {
+          user_id: string
+          new_value: number
         }
         Returns: undefined
       }

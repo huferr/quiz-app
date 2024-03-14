@@ -1,5 +1,8 @@
 import { Database } from "./api"
 
+type DBType<T extends keyof Database["public"]["Tables"]> =
+  Database["public"]["Tables"][T]["Row"]
+
 export interface GeneralProps {
   mb?: number
   mt?: number
@@ -7,8 +10,15 @@ export interface GeneralProps {
   mr?: number
 }
 
-export type Question = Database["public"]["Tables"]["questions"]["Row"]
+export type User = DBType<"profiles">
 
-export type User = Database["public"]["Tables"]["profiles"]["Row"]
+export type Question = DBType<"questions">
 
-export type Battle = Database["public"]["Tables"]["battles"]["Row"]
+export type Battle = DBType<"battles">
+
+export enum QuestionTypes {
+  history = "history",
+  science = "science",
+  geo = "geo",
+  math = "math"
+}
