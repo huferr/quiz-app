@@ -19,7 +19,7 @@
 
 - Add profile pic;
 - Change username;
-- Nível;
+- Nível (Respostas corretas);
 - Torneios ganho (coroas/badges);
 
 ## MVP 1.0
@@ -36,35 +36,28 @@
 
 - (FE) React Native (Expo / Expo Router);
 - (BE) Supabase (PostgreSQL);
-- (BE) SQL Functions;
-
-### SQL Functions
-
 
 ### Backend
 
  - Triggers;
-    - `update_badges`
-    - `on_auth_user_created`
+    - `handle_updated_at` (Populates updated_at column)
+    - `update_battle_badges` (Updates battle badges)
+    - `update_correct_answers_trigger` (Triggers `update_correct_answers()` function)
+    - `update_streak_badges` (Updates streak badges)
+    - `on_auth_user_created` (reflect new users in `Profiles` table)
 
 - Functions;
-    - `update_correct_answers_amount()`
     - `update_wrong_answers_amount()`
     - `update_badges_trigger()`
     - `handle_new_user()`
     - `update_battle_score()`
+    - `update_correct_answers()`
     - `update_free_coins()`
     - `update_paid_coins()`
-    - `update_points()`
     
 - Tables;
     - `profiles`
     - `questions`
     - `battles`
     - `user (auth)`
-
-### Frontend
-
-- React Query;
-- Axios;
 
