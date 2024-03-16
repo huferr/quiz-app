@@ -17,10 +17,9 @@
 
 ### User
 
-- Add profile pic;
+- Choose profile pic (specific images provided by us);
 - Change username;
 - Nível (Respostas corretas);
-- Torneios ganho (coroas/badges);
 
 ## MVP 1.0
 
@@ -39,25 +38,29 @@
 
 ### Backend
 
- - Triggers;
-    - `handle_updated_at` (Populates updated_at column)
-    - `update_battle_badges` (Updates battle badges)
-    - `update_correct_answers_trigger` (Triggers `update_correct_answers()` function)
-    - `update_streak_badges` (Updates streak badges)
-    - `on_auth_user_created` (reflect new users in `Profiles` table)
+- Triggers;
+
+  - `handle_updated_at` (Populates updated_at column)
+  - `update_battle_badges` (Updates battle badges)
+  - `update_correct_answers_trigger` (Triggers `update_correct_answers()` function)
+  - `update_streak_badges` (Updates streak badges)
+  - `on_auth_user_created` (reflect new users in `Profiles` table)
 
 - Functions;
-    - `update_wrong_answers_amount()`
-    - `update_badges_trigger()`
-    - `handle_new_user()`
-    - `update_battle_score()`
-    - `update_correct_answers()`
-    - `update_free_coins()`
-    - `update_paid_coins()`
-    
+  - `handle_new_user()`
+  - `update_battle_badges()`
+  - `update_battle_score()`
+  - `update_correct_answers()`
+  - `update_free_coins()`
+  - `update_geo_correct_answers()`
+  - `update_history_correct_answers()`
+  - `update_math_correct_answers()`
+  - `update_paid_coins()`
+  - `update_science_correct_answers()`
+  - `update_streak_badges()`
+  - `update_wrong_answers_amount()`
 - Tables;
-    - `profiles`
-    - `questions`
-    - `battles`
-    - `user (auth)`
-
+  - `profiles`
+  - `questions`
+  - `battles`
+  - `user (auth)`
